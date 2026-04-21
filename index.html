@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>價格建議工具</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: #888;
+color: #1a1a1a;
+font-family: ‘Noto Serif TC’, ‘Microsoft JhengHei’, sans-serif;
+min-height: 100vh;
+}
+
+/* page scrolls naturally — no overflow:hidden on container */
+.container {
+max-width: 1440px;
+margin: 0 auto;
+padding: 20px 40px 40px;
+background: #f8f5ef;
+min-height: 100vh;
+}
+
+header {
+text-align: center;
+margin-bottom: 18px;
+padding-bottom: 14px;
+border-bottom: 3px solid #7a4d00;
+position: relative;
+flex-shrink: 0;
+}
+header::after {
+content: ‘◆’;
+position: absolute; bottom: -12px; left: 50%;
+transform: translateX(-50%);
+background: #f8f5ef; padding: 0 10px;
+color: #7a4d00; font-size: 13px;
+}
+h1 { font-size: 32px; font-weight: 700; letter-spacing: .1em; color: #1a1a1a; }
+.subtitle {
+margin-top: 5px; font-size: 13px;
+color: #a06500; letter-spacing: .2em;
+font-family: ‘DM Mono’, monospace; font-weight: 700;
+}
+
+/* Main tabs */
+.tab-nav {
+display: flex; margin-bottom: 16px;
+border: 2px solid #5a4020; border-radius: 5px;
+overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+.tab-btn {
+flex: 1; padding: 14px 12px;
+background: #ddd6c4; border: none;
+border-right: 2px solid #5a4020; cursor: pointer;
+font-family: ‘Noto Serif TC’, ‘Microsoft JhengHei’, sans-serif;
+font-size: 18px; font-weight: 700; letter-spacing: .08em; color: #444;
+transition: background .2s, color .2s; line-height: 1.3;
+}
+.tab-btn:last-child { border-right: none; }
+.tab-btn.active { background: #1a1a1a; color: #fff; }
+.tab-btn:not(.active):hover { background: #bfb090; color: #1a1a1a; }
+.tab-btn .tab-sub {
+display: block; font-size: 11px; letter-spacing: .13em;
+font-family: ‘DM Mono’, monospace; margin-top: 3px; opacity: .8;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Sub-tabs */
+.sub-nav {
+display: flex; margin-bottom: 16px;
+border: 2px solid #5a4020; border-radius: 5px; overflow: hidden;
+}
+.sub-btn {
+flex: 1; padding: 11px 12px;
+background: #ddd6c4; border: none;
+border-right: 2px solid #5a4020; cursor: pointer;
+font-family: ‘Noto Serif TC’, ‘Microsoft JhengHei’, sans-serif;
+font-size: 16px; font-weight: 700; letter-spacing: .08em; color: #444;
+transition: background .2s, color .2s;
+}
+.sub-btn:last-child { border-right: none; }
+.sub-btn.gold-active { background: #7a4d00; color: #fff; }
+.sub-btn.sage-active { background: #1e3d24; color: #fff; }
+.sub-btn:not(.gold-active):not(.sage-active):hover { background: #bfb090; color: #1a1a1a; }
+.sub-panel { display: none; }
+.sub-panel.active { display: block; }
+
+/* Cards */
+.card {
+background: #ede8da; border: 2px solid #8a7040;
+border-radius: 5px; padding: 18px 22px; margin-bottom: 16px;
+box-shadow: 0 1px 6px rgba(0,0,0,.08);
+}
+.cgrid { display: grid; gap: 18px; align-items: end; }
+.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.g5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+.g6 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; }
+.divider { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #8a7040; }
+.fg { display: flex; flex-direction: column; gap: 7px; }
+
+label {
+font-size: 13px; letter-spacing: .06em;
+color: #6b3d00; font-family: ‘DM Mono’, monospace; font-weight: 800;
+}
+label.nl { color: #0f1e3c; }
+
+input[type=“number”], input[type=“text”], select {
+background: #fff; border: 2px solid #8a7040; border-radius: 4px;
+padding: 10px 13px; font-family: ‘DM Mono’, monospace;
+font-size: 16px; color: #1a1a1a; width: 100%;
+transition: border-color .2s; -webkit-appearance: none; font-weight: 600;
+}
+input:focus, select:focus {
+outline: none; border-color: #7a4d00;
+box-shadow: 0 0 0 3px rgba(122,77,0,.2);
+}
+.unote { font-size: 11px; color: #777; font-family: ‘DM Mono’, monospace; margin-top: 2px; }
+
+.tdisp {
+background: #1a1a1a; color: #fff; border-radius: 4px;
+padding: 10px 13px; font-family: ‘DM Mono’, monospace;
+font-size: 20px; font-weight: 700; text-align: center;
+}
+.tdisp.nb { background: #0f1e3c; }
+
+.bstrip { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.bchip {
+background: rgba(15,30,60,.1); border: 1.5px solid rgba(15,30,60,.35);
+border-radius: 3px; padding: 6px 14px;
+font-family: ‘DM Mono’, monospace; font-size: 14px; color: #0f1e3c; font-weight: 800;
+}
+.bchip span { font-weight: 900; }
+
+/* Loan cards (unused but kept for safety) */
+.loan-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.lcard { background: #ede8da; border: 2px solid #8a7040; border-radius: 5px; padding: 14px 18px; }
+.lcard-title { font-size: 12px; color: #6b3d00; font-family: ‘DM Mono’, monospace; font-weight: 900; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1.5px solid #8a7040; }
+.lrow { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(138,112,64,.3); }
+.lrow:last-child { border-bottom: none; }
+.ll { color: #333; font-size: 14px; font-weight: 600; }
+.lv { font-family: ‘DM Mono’, monospace; font-weight: 700; font-size: 15px; color: #1a1a1a; }
+.lrow.hl .lv { color: #8b1a00; font-size: 20px; font-weight: 900; }
+.lrow select { width: 100px; padding: 4px 7px; font-size: 13px; }
+
+/* Table — no scroll, full display */
+.tsect {
+background: #fff; border: 2px solid #8a7040;
+border-radius: 5px; overflow: hidden;
+box-shadow: 0 2px 8px rgba(0,0,0,.1);
+margin-bottom: 16px;
+}
+.tbar {
+padding: 12px 22px; font-size: 15px; letter-spacing: .1em;
+font-family: ‘DM Mono’, monospace; font-weight: 800;
+display: flex; justify-content: space-between; align-items: center; gap: 4px;
+}
+.tbar.gold-bar { background: #3a2000; color: #ffd240; }
+.tbar.navy-bar { background: #0f1e3c; color: #90b8ff; }
+.tbar.sage-bar { background: #102015; color: #70d890; }
+.tscroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th {
+font-family: ‘DM Mono’, monospace; font-size: 13px;
+letter-spacing: .06em; padding: 11px 14px;
+text-align: center; border-bottom: 2px solid #8a7040; font-weight: 800;
+}
+thead.gold-head th { background: #ead090; color: #3a1800; }
+thead.navy-head th { background: #b0c0e8; color: #0f1e3c; }
+thead.sage-head th { background: #90c8a0; color: #0d2015; }
+tbody tr { border-bottom: 1px solid rgba(138,112,64,.22); transition: background .1s; }
+tbody tr:nth-child(even) { background: rgba(230,222,204,.5); }
+tbody tr:hover { background: rgba(200,160,40,.12); }
+tbody tr.crow { background: rgba(139,26,0,.1) !important; font-weight: 700; }
+tbody tr.crow td { color: #8b1a00; }
+tbody tr.cur-row { background: #ffea00 !important; }
+tbody tr.cur-row td { color: #3a1800 !important; font-weight: 800; }
+tbody td { padding: 11px 14px; text-align: center; font-family: ‘DM Mono’, monospace; font-size: 15px; }
+td.pc { font-size: 16px; font-weight: 800; }
+td.d20 { color: #1e3d24; font-weight: 700; }
+td.d30 { color: #8b1a00; font-weight: 700; }
+td.rmk { text-align: left; font-size: 13px; white-space: pre-line; line-height: 1.6; min-width: 120px; color: #222; }
+
+.cur-badge {
+display: inline-block; background: #d47000; color: #fff;
+font-size: 12px; padding: 3px 9px; border-radius: 3px;
+font-family: ‘DM Mono’, monospace; font-weight: 800;
+margin-left: 8px; vertical-align: middle;
+}
+
+/* Remark inputs */
+.rmk-section { margin-top: 14px; padding-top: 12px; border-top: 1px dashed #8a7040; }
+.rmk-lbl { font-size: 13px; color: #1e3d24; font-family: ‘DM Mono’, monospace; margin-bottom: 10px; font-weight: 800; }
+.rmk-entries { display: flex; flex-direction: column; gap: 9px; }
+.rmk-entry { display: grid; grid-template-columns: 120px 1fr 36px; gap: 9px; align-items: center; }
+.rmk-entry input { font-size: 14px; padding: 7px 10px; }
+.rmk-del {
+width: 34px; height: 34px; background: none;
+border: 2px solid #8a7040; border-radius: 3px;
+cursor: pointer; color: #666; font-size: 16px;
+display: flex; align-items: center; justify-content: center;
+transition: border-color .2s, color .2s;
+}
+.rmk-del:hover { border-color: #8b1a00; color: #8b1a00; }
+.add-rmk {
+margin-top: 10px; padding: 9px 18px;
+background: none; border: 2px dashed #1e3d24;
+border-radius: 3px; cursor: pointer;
+font-family: ‘DM Mono’, monospace; font-size: 14px;
+color: #1e3d24; letter-spacing: .08em; font-weight: 800;
+transition: all .2s;
+}
+.add-rmk:hover { background: #1e3d24; color: #fff; }
+
+.slbl { font-size: 11px; color: #777; font-family: ‘DM Mono’, monospace; margin-bottom: 9px; font-weight: 700; }
+.footer-note { text-align: center; padding: 20px 0 10px; font-size: 12px; color: #888; font-family: ‘DM Mono’, monospace; }
+
+@media(max-width:900px){
+.container { padding: 14px 16px 30px; }
+.g3,.g4 { grid-template-columns: 1fr 1fr; }
+.g3 .fg:last-child,.g4 .fg:last-child { grid-column: 1/-1; }
+.g5 { grid-template-columns: 1fr 1fr; }
+.g5 .fg:nth-child(5) { grid-column: 1/-1; }
+.loan-pair { grid-template-columns: 1fr; }
+.rmk-entry { grid-template-columns: 90px 1fr 30px; }
+}
+
+/* ── Horizontal loan plan ── */
+.hcard {
+display: flex; align-items: stretch;
+background: #ede8da; border: 2px solid #8a7040;
+border-radius: 5px; margin-bottom: 16px;
+box-shadow: 0 1px 6px rgba(0,0,0,.08); overflow: hidden;
+}
+.hplan { flex: 1; padding: 14px 20px; }
+.hplan-divider { width: 2px; background: #8a7040; flex-shrink: 0; }
+.hplan-title {
+font-size: 12px; letter-spacing: .14em; color: #6b3d00;
+font-family: ‘DM Mono’, monospace; font-weight: 900;
+margin-bottom: 10px; text-transform: uppercase;
+border-bottom: 1.5px solid #8a7040; padding-bottom: 6px;
+}
+.hfields { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.hf { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.hl { font-size: 11px; color: #6b3d00; font-family: ‘DM Mono’, monospace; font-weight: 800; letter-spacing: .04em; white-space: nowrap; }
+.hv { font-family: ‘DM Mono’, monospace; font-weight: 700; font-size: 14px; color: #1a1a1a; white-space: nowrap; }
+.hv-big { font-family: ‘DM Mono’, monospace; font-weight: 900; font-size: 22px; color: #8b1a00; white-space: nowrap; }
+.hf select { padding: 5px 8px; font-size: 13px; width: auto; font-family: ‘DM Mono’, monospace; font-weight: 600; border: 2px solid #8a7040; border-radius: 3px; background: #fff; }
+.hf.monthly { margin-left: 6px; border-left: 1px dashed #8a7040; padding-left: 16px; }
+
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>價格建議工具</h1>
+    <div class="subtitle">PRICE SUGGESTION CALCULATOR</div>
+  </header>
+
+  <!-- ══ Main Tab Nav ══ -->
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab(0)">
+      🏷 買方價格建議
+      <span class="tab-sub">BUYER SUGGESTION</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab(1)">
+      📋 賣方價格建議
+      <span class="tab-sub">SELLER SUGGESTION</span>
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       TAB 0：買方價格建議
+  ══════════════════════════════════════ -->
+
+  <div class="tab-panel active" id="tab0">
+    <div class="sub-nav">
+      <button class="sub-btn gold-active" onclick="switchSub('b',0)">🏠 無車位</button>
+      <button class="sub-btn" onclick="switchSub('b',1)">🚗 含車位</button>
+    </div>
+
+```
+<!-- 買方 無車位 -->
+<div class="sub-panel active" id="b_sub0">
+  <div class="card">
+    <div class="cgrid g4">
+      <div class="fg"><label>本案單價（萬/坪）</label><input type="number" id="n_unit" value="50" min="1" step="1" oninput="calcNo()"></div>
+      <div class="fg"><label>最低顯示單價（萬/坪）</label><input type="number" id="n_minUnit" value="35" min="1" step="1" oninput="calcNo()"></div>
+      <div class="fg"><label>坪數（坪）</label><input type="number" id="n_ping" value="22.26" min="1" step="0.01" oninput="calcNo()"></div>
+      <div class="fg"><label>房屋總價（萬）</label><div class="tdisp" id="n_total">1,113</div><div class="unote">= 單價 × 坪數</div></div>
+    </div>
+  </div>
+
+  <div class="hcard">
+    <div class="hplan">
+      <div class="hplan-title">▸ 方案 A</div>
+      <div class="hfields">
+        <div class="hf"><span class="hl">承購</span><span class="hv" id="n_priceA">—</span></div>
+        <div class="hf"><span class="hl">成數</span><select id="n_ratioA" onchange="calcNo()"><option value="0.3">30%</option><option value="0.4">40%</option><option value="0.5">50%</option><option value="0.6">60%</option><option value="0.7" selected>70%</option><option value="0.8">80%</option></select></div>
+        <div class="hf"><span class="hl">貸款</span><span class="hv" id="n_loanA">—</span></div>
+        <div class="hf"><span class="hl">自備</span><span class="hv" id="n_downA">—</span></div>
+        <div class="hf"><span class="hl">年限</span><select id="n_yearsA" onchange="calcNo()"><option value="20">20年</option><option value="30" selected>30年</option><option value="40">40年</option></select></div>
+        <div class="hf"><span class="hl">利率</span><select id="n_rateA" onchange="calcNo()"><option value="2.1">2.1%</option><option value="2.2">2.2%</option><option value="2.3">2.3%</option><option value="2.4">2.4%</option><option value="2.5">2.5%</option><option value="2.6" selected>2.6%</option><option value="2.7">2.7%</option><option value="2.8">2.8%</option><option value="2.9">2.9%</option><option value="3.0">3.0%</option></select></div>
+        <div class="hf monthly"><span class="hl">月還款</span><span class="hv-big" id="n_monthlyA">—</span></div>
+      </div>
+    </div>
+    <div class="hplan-divider"></div>
+    <div class="hplan">
+      <div class="hplan-title">▸ 方案 B</div>
+      <div class="hfields">
+        <div class="hf"><span class="hl">承購</span><span class="hv" id="n_priceB">—</span></div>
+        <div class="hf"><span class="hl">成數</span><select id="n_ratioB" onchange="calcNo()"><option value="0.3">30%</option><option value="0.4">40%</option><option value="0.5">50%</option><option value="0.6" selected>60%</option><option value="0.7">70%</option><option value="0.8">80%</option></select></div>
+        <div class="hf"><span class="hl">貸款</span><span class="hv" id="n_loanB">—</span></div>
+        <div class="hf"><span class="hl">自備</span><span class="hv" id="n_downB">—</span></div>
+        <div class="hf"><span class="hl">年限</span><select id="n_yearsB" onchange="calcNo()"><option value="20">20年</option><option value="30" selected>30年</option><option value="40">40年</option></select></div>
+        <div class="hf"><span class="hl">利率</span><select id="n_rateB" onchange="calcNo()"><option value="2.1">2.1%</option><option value="2.2">2.2%</option><option value="2.3">2.3%</option><option value="2.4">2.4%</option><option value="2.5">2.5%</option><option value="2.6" selected>2.6%</option><option value="2.7">2.7%</option><option value="2.8">2.8%</option><option value="2.9">2.9%</option><option value="3.0">3.0%</option></select></div>
+        <div class="hf monthly"><span class="hl">月還款</span><span class="hv-big" id="n_monthlyB">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tsect">
+    <div class="tbar gold-bar"><span>各單價試算表</span><span id="n_info">坪數：22.26 坪</span></div>
+    <div class="tscroll">
+      <table><thead class="gold-head"><tr>
+        <th>單價（萬/坪）</th><th>坪數</th><th>房屋總價（萬）</th><th>2成自備款</th><th>3成自備款</th>
+      </tr></thead><tbody id="n_tbody"></tbody></table>
+    </div>
+  </div>
+</div><!-- /b_sub0 -->
+
+<!-- 買方 含車位 -->
+<div class="sub-panel" id="b_sub1">
+  <div class="card">
+    <div class="slbl">主建物＋車位</div>
+    <div class="cgrid g6">
+      <div class="fg"><label>單坪價格（萬/坪）</label><input type="number" id="p_unit" value="50" min="1" step="1" oninput="calcWith()"></div>
+      <div class="fg"><label>最低顯示單價（萬/坪）</label><input type="number" id="p_minUnit" value="35" min="1" step="1" oninput="calcWith()"></div>
+      <div class="fg"><label>坪數（坪）</label><input type="number" id="p_ping" value="22.26" min="1" step="0.01" oninput="calcWith()"></div>
+      <div class="fg"><label>房屋總價（萬）</label><div class="tdisp" id="p_unitTotal">1,113</div></div>
+      <div class="fg"><label class="nl">車位價格（萬）</label><input type="number" id="p_park" value="150" min="0" step="10" oninput="calcWith()" style="border-color:rgba(42,58,90,.4)"></div>
+      <div class="fg"><label class="nl">含車位總價（萬）</label><div class="tdisp nb" id="p_grand">1,263</div></div>
+    </div>
+    <div class="divider">
+      <div class="bstrip">
+        <div class="bchip">房屋總價 <span id="bd_u">1,113</span> 萬</div>
+        <div class="bchip">＋ 車位 <span id="bd_p">150</span> 萬</div>
+        <div class="bchip">＝ 合計 <span id="bd_t">1,263</span> 萬</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hcard">
+    <div class="hplan">
+      <div class="hplan-title">▸ 方案 A（含車位）</div>
+      <div class="hfields">
+        <div class="hf"><span class="hl">承購</span><span class="hv" id="p_priceA">—</span></div>
+        <div class="hf"><span class="hl">成數</span><select id="p_ratioA" onchange="calcWith()"><option value="0.3">30%</option><option value="0.4">40%</option><option value="0.5">50%</option><option value="0.6">60%</option><option value="0.7" selected>70%</option><option value="0.8">80%</option></select></div>
+        <div class="hf"><span class="hl">貸款</span><span class="hv" id="p_loanA">—</span></div>
+        <div class="hf"><span class="hl">自備</span><span class="hv" id="p_downA">—</span></div>
+        <div class="hf"><span class="hl">年限</span><select id="p_yearsA" onchange="calcWith()"><option value="20">20年</option><option value="30" selected>30年</option><option value="40">40年</option></select></div>
+        <div class="hf"><span class="hl">利率</span><select id="p_rateA" onchange="calcWith()"><option value="2.1">2.1%</option><option value="2.2">2.2%</option><option value="2.3">2.3%</option><option value="2.4">2.4%</option><option value="2.5">2.5%</option><option value="2.6" selected>2.6%</option><option value="2.7">2.7%</option><option value="2.8">2.8%</option><option value="2.9">2.9%</option><option value="3.0">3.0%</option></select></div>
+        <div class="hf monthly"><span class="hl">月還款</span><span class="hv-big" id="p_monthlyA">—</span></div>
+      </div>
+    </div>
+    <div class="hplan-divider"></div>
+    <div class="hplan">
+      <div class="hplan-title">▸ 方案 B（含車位）</div>
+      <div class="hfields">
+        <div class="hf"><span class="hl">承購</span><span class="hv" id="p_priceB">—</span></div>
+        <div class="hf"><span class="hl">成數</span><select id="p_ratioB" onchange="calcWith()"><option value="0.3">30%</option><option value="0.4">40%</option><option value="0.5">50%</option><option value="0.6" selected>60%</option><option value="0.7">70%</option><option value="0.8">80%</option></select></div>
+        <div class="hf"><span class="hl">貸款</span><span class="hv" id="p_loanB">—</span></div>
+        <div class="hf"><span class="hl">自備</span><span class="hv" id="p_downB">—</span></div>
+        <div class="hf"><span class="hl">年限</span><select id="p_yearsB" onchange="calcWith()"><option value="20">20年</option><option value="30" selected>30年</option><option value="40">40年</option></select></div>
+        <div class="hf"><span class="hl">利率</span><select id="p_rateB" onchange="calcWith()"><option value="2.1">2.1%</option><option value="2.2">2.2%</option><option value="2.3">2.3%</option><option value="2.4">2.4%</option><option value="2.5">2.5%</option><option value="2.6" selected>2.6%</option><option value="2.7">2.7%</option><option value="2.8">2.8%</option><option value="2.9">2.9%</option><option value="3.0">3.0%</option></select></div>
+        <div class="hf monthly"><span class="hl">月還款</span><span class="hv-big" id="p_monthlyB">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tsect">
+    <div class="tbar navy-bar"><span>各單價試算表（含車位）</span><span id="p_info">坪數：22.26 坪 ｜ 車位：150 萬</span></div>
+    <div class="tscroll">
+      <table><thead class="navy-head"><tr>
+        <th>單坪價格</th><th>房屋總價</th><th>車位（萬）</th><th>合計總價（萬）</th><th>2成自備款</th><th>3成自備款</th>
+      </tr></thead><tbody id="p_tbody"></tbody></table>
+    </div>
+  </div>
+</div><!-- /b_sub1 -->
+```
+
+  </div><!-- /tab0 -->
+
+  <!-- ══════════════════════════════════════
+       TAB 1：賣方價格建議
+  ══════════════════════════════════════ -->
+
+  <div class="tab-panel" id="tab1">
+    <div class="sub-nav">
+      <button class="sub-btn sage-active" onclick="switchSub('s',0)">🏠 無車位</button>
+      <button class="sub-btn" onclick="switchSub('s',1)">🚗 含車位</button>
+    </div>
+
+```
+<!-- 賣方 無車位 -->
+<div class="sub-panel active" id="s_sub0">
+  <div class="card">
+    <div class="cgrid g4">
+      <div class="fg"><label>坪數（坪）</label><input type="number" id="an_ping" value="55.36" min="1" step="0.01" oninput="buildAno()"></div>
+      <div class="fg"><label>單價起始（萬/坪）</label><input type="number" id="an_start" value="55" min="1" step="1" oninput="buildAno()"></div>
+      <div class="fg"><label>單價結束（萬/坪）</label><input type="number" id="an_end" value="75" min="1" step="1" oninput="buildAno()"></div>
+      <div class="fg"><label>目前開價單價（萬/坪）</label><input type="number" id="an_cur" value="67" min="0" step="0.1" oninput="buildAno()" placeholder="例：67"></div>
+    </div>
+    <div class="rmk-section">
+      <div class="rmk-lbl">條件／備注輸入（依單價對應，同一整數單價可新增多筆）</div>
+      <div class="rmk-entries" id="an_rmks"></div>
+      <button class="add-rmk" onclick="addRmk('an')">＋ 新增備注</button>
+    </div>
+  </div>
+
+  <div class="tsect">
+    <div class="tbar sage-bar"><span>賣方價格建議（無車位）</span><span id="an_info">坪數：55.36 坪</span></div>
+    <div class="tscroll">
+      <table><thead class="sage-head"><tr>
+        <th>單價（萬/坪）</th><th>坪數</th><th>總價（萬）</th><th>條件／備注</th>
+      </tr></thead><tbody id="an_tbody"></tbody></table>
+    </div>
+  </div>
+</div><!-- /s_sub0 -->
+
+<!-- 賣方 含車位 -->
+<div class="sub-panel" id="s_sub1">
+  <div class="card">
+    <div class="cgrid g5">
+      <div class="fg"><label>坪數（坪）</label><input type="number" id="ap_ping" value="55.36" min="1" step="0.01" oninput="buildAyes()"></div>
+      <div class="fg"><label class="nl">車位（萬）</label><input type="number" id="ap_park" value="500" min="0" step="10" oninput="buildAyes()" style="border-color:rgba(42,58,90,.4)"></div>
+      <div class="fg"><label>單價起始（萬/坪）</label><input type="number" id="ap_start" value="55" min="1" step="1" oninput="buildAyes()"></div>
+      <div class="fg"><label>單價結束（萬/坪）</label><input type="number" id="ap_end" value="75" min="1" step="1" oninput="buildAyes()"></div>
+      <div class="fg"><label>目前開價單價（萬/坪）</label><input type="number" id="ap_cur" value="67" min="0" step="0.1" oninput="buildAyes()" placeholder="例：67"></div>
+    </div>
+    <div class="rmk-section">
+      <div class="rmk-lbl">條件／備注輸入（依單價對應，同一整數單價可新增多筆）</div>
+      <div class="rmk-entries" id="ap_rmks"></div>
+      <button class="add-rmk" onclick="addRmk('ap')">＋ 新增備注</button>
+    </div>
+  </div>
+
+  <div class="tsect">
+    <div class="tbar sage-bar"><span>賣方價格建議（含車位）</span><span id="ap_info">坪數：55.36 坪 ｜ 車位：500 萬</span></div>
+    <div class="tscroll">
+      <table><thead class="sage-head"><tr>
+        <th>單價（萬/坪）</th><th>坪數</th><th>車位（萬）</th><th>總價（萬）</th><th>條件／備注</th>
+      </tr></thead><tbody id="ap_tbody"></tbody></table>
+    </div>
+  </div>
+</div><!-- /s_sub1 -->
+```
+
+  </div><!-- /tab1 -->
+
+  <div class="footer-note">數字僅供參考，實際貸款條件依銀行核定為準</div>
+</div>
+
+<script>
+/* ── helpers ── */
+function mp(pr,rt,yr){ if(pr<=0)return 0; const r=rt/100/12,n=yr*12; if(r===0)return Math.round(pr*10000/n); return Math.round(pr*10000*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)); }
+function fmt(n){ return Math.round(n).toLocaleString('zh-TW'); }
+function fmtD(n){ return parseFloat(n).toLocaleString('zh-TW',{minimumFractionDigits:0,maximumFractionDigits:2}); }
+function v(id){ return parseFloat(document.getElementById(id).value)||0; }
+function iv(id){ return parseInt(document.getElementById(id).value)||30; }
+function set(id,t){ document.getElementById(id).textContent=t; }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function fillLoans(pfx, total){
+  ['A','B'].forEach(x=>{
+    const r=v(pfx+'ratio'+x), y=iv(pfx+'years'+x), ir=v(pfx+'rate'+x);
+    const loan=Math.round(total*r), down=total-loan;
+    set(pfx+'price'+x, fmt(total)+' 萬');
+    set(pfx+'loan'+x, fmt(loan)+' 萬');
+    set(pfx+'down'+x, fmt(down)+' 萬');
+    set(pfx+'monthly'+x, fmt(mp(loan,ir,y)));
+  });
+}
+
+/* ── 買方 無車位 ── */
+function calcNo(){
+  const unit=v('n_unit'), ping=v('n_ping'), total=Math.round(unit*ping);
+  set('n_total',fmt(total)); set('n_info',`坪數：${ping} 坪`);
+  fillLoans('n_',total);
+  const tb=document.getElementById('n_tbody'); tb.innerHTML='';
+  const s=Math.max(1,Math.round(v('n_minUnit'))||1), e=Math.round(unit);
+  for(let u=s;u<=e;u++){
+    const t=Math.round(u*ping), ic=u===Math.round(unit);
+    const tr=document.createElement('tr');
+    tr.className=ic?'crow':((u-s)%2===1?'srow':'');
+    tr.innerHTML=`<td class="pc">${u}${ic?' ◀':''}</td><td>${ping}</td><td class="pc">${fmt(t)}</td><td class="d20">${fmt(Math.round(t*.2))}</td><td class="d30">${fmt(Math.round(t*.3))}</td>`;
+    tb.appendChild(tr);
+  }
+}
+
+/* ── 買方 含車位 ── */
+function calcWith(){
+  const unit=v('p_unit'), ping=v('p_ping'), park=v('p_park');
+  const ut=Math.round(unit*ping), grand=ut+park;
+  set('p_unitTotal',fmt(ut)); set('p_grand',fmt(grand));
+  set('bd_u',fmt(ut)); set('bd_p',fmt(park)); set('bd_t',fmt(grand));
+  set('p_info',`坪數：${ping} 坪 ｜ 車位：${fmt(park)} 萬`);
+  fillLoans('p_',grand);
+  const tb=document.getElementById('p_tbody'); tb.innerHTML='';
+  const s=Math.max(1,Math.round(v('p_minUnit'))||1), e=Math.round(unit);
+  for(let u=s;u<=e;u++){
+    const uT=Math.round(u*ping), g=uT+park, ic=u===Math.round(unit);
+    const tr=document.createElement('tr');
+    tr.className=ic?'crow':((u-s)%2===1?'srow':'');
+    tr.innerHTML=`<td class="pc">${u}${ic?' ◀':''}</td><td>${fmt(uT)}</td><td>${fmt(park)}</td><td class="pc">${fmt(g)}</td><td class="d20">${fmt(Math.round(g*.2))}</td><td class="d30">${fmt(Math.round(g*.3))}</td>`;
+    tb.appendChild(tr);
+  }
+}
+
+/* ── 備注系統 ── */
+let rmkCnt=0;
+function addRmk(pfx){
+  const c=document.getElementById(pfx+'_rmks');
+  const id='r'+(++rmkCnt);
+  const d=document.createElement('div');
+  d.className='rmk-entry'; d.id=id;
+  d.innerHTML=`<input type="number" placeholder="單價整數" min="1" step="1" oninput="refrA('${pfx}')"><input type="text" placeholder="條件／備注內容" oninput="refrA('${pfx}')"><button class="rmk-del" onclick="delRmk('${pfx}','${id}')">×</button>`;
+  c.appendChild(d);
+}
+function delRmk(pfx,id){ document.getElementById(id).remove(); refrA(pfx); }
+function refrA(pfx){ pfx==='an'?buildAno():buildAyes(); }
+function getRmks(pfx){
+  const map={};
+  document.getElementById(pfx+'_rmks').querySelectorAll('.rmk-entry').forEach(e=>{
+    const ins=e.querySelectorAll('input'), u=parseInt(ins[0].value), t=ins[1].value.trim();
+    if(!isNaN(u)&&u>0&&t){ if(!map[u])map[u]=[]; map[u].push(t); }
+  });
+  return map;
+}
+
+/* ── 賣方 無車位 ── */
+function buildAno(){
+  const ping=v('an_ping'), s=Math.round(v('an_start')), e=Math.round(v('an_end'));
+  const curR=v('an_cur'), curI=curR>0?Math.floor(curR):-1;
+  set('an_info',`坪數：${ping} 坪`);
+  const rmks=getRmks('an'), tb=document.getElementById('an_tbody'); tb.innerHTML='';
+  for(let u=Math.min(s,e);u<=Math.max(s,e);u++){
+    const t=Math.round(u*ping), ic=curR>0&&u===curI;
+    const tr=document.createElement('tr');
+    tr.className=ic?'cur-row':((u-s)%2===1?'srow-sage':'');
+    const badge=ic?`<span class="cur-badge">目前開價 ${fmtD(curR)} 萬/坪</span>`:'';
+    const rmkTxt=(rmks[u]||[]).join('\n');
+    tr.innerHTML=`<td class="pc">${u}${badge}</td><td>${ping}</td><td class="pc">${fmt(t)}</td><td class="rmk">${esc(rmkTxt)}</td>`;
+    tb.appendChild(tr);
+  }
+}
+
+/* ── 賣方 含車位 ── */
+function buildAyes(){
+  const ping=v('ap_ping'), park=v('ap_park'), s=Math.round(v('ap_start')), e=Math.round(v('ap_end'));
+  const curR=v('ap_cur'), curI=curR>0?Math.floor(curR):-1;
+  set('ap_info',`坪數：${ping} 坪 ｜ 車位：${fmt(park)} 萬`);
+  const rmks=getRmks('ap'), tb=document.getElementById('ap_tbody'); tb.innerHTML='';
+  for(let u=Math.min(s,e);u<=Math.max(s,e);u++){
+    const uT=Math.round(u*ping), grand=uT+park, ic=curR>0&&u===curI;
+    const tr=document.createElement('tr');
+    tr.className=ic?'cur-row':((u-s)%2===1?'srow-sage':'');
+    const badge=ic?`<span class="cur-badge">目前開價 ${fmtD(curR)} 萬/坪</span>`:'';
+    const rmkTxt=(rmks[u]||[]).join('\n');
+    tr.innerHTML=`<td class="pc">${u}${badge}</td><td>${ping}</td><td>${fmt(park)}</td><td class="pc">${fmt(grand)}</td><td class="rmk">${esc(rmkTxt)}</td>`;
+    tb.appendChild(tr);
+  }
+}
+
+/* ── Tab / Sub switching ── */
+function switchTab(i){
+  document.querySelectorAll('.tab-btn').forEach((b,j)=>b.classList.toggle('active',i===j));
+  document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+function switchSub(grp, i){
+  const prefix = grp==='b' ? 'b_sub' : 's_sub';
+  const activeClass = grp==='b' ? 'gold-active' : 'sage-active';
+  // toggle sub-nav buttons within this tab panel
+  const panel = document.getElementById('tab'+(grp==='b'?0:1));
+  panel.querySelectorAll('.sub-btn').forEach((b,j)=>{
+    b.classList.remove('gold-active','sage-active');
+    if(i===j) b.classList.add(activeClass);
+  });
+  panel.querySelectorAll('.sub-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+}
+
+/* ── Init ── */
+calcNo(); calcWith(); buildAno(); buildAyes();
+</script>
+
+</body>
+</html>
