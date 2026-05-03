@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>房地稅務與房貸試算</title>
+<title>房地稅務試算</title>
 <style>
 :root{
   --primary:#2563eb;--primary-dark:#1d4ed8;--success:#16a34a;--warning:#f59e0b;
@@ -103,26 +103,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei
 @media screen { #_print-zone { display: none !important; } }
 @media print {
   body * { display: none !important; }
-  #_print-zone, #_print-zone * { display: block !important; }
-  #_print-zone .ir-row, #_print-zone .ir-total { display: flex !important; }
+  #_print-zone { display: block !important; width: 100%; padding: 24px; font-family: -apple-system,'Microsoft JhengHei',sans-serif; background: #fff; }
+  #_print-zone * { display: revert !important; }
+  #_print-zone table { display: table !important; width: 100%; border-collapse: collapse; }
+  #_print-zone thead { display: table-header-group !important; }
+  #_print-zone tbody { display: table-row-group !important; }
+  #_print-zone tr { display: table-row !important; }
+  #_print-zone td, #_print-zone th { display: table-cell !important; }
+  #_print-zone .ir-row { display: flex !important; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,.15); }
+  #_print-zone .ir-total { display: flex !important; justify-content: center; flex-direction: column; align-items: center; padding-top: 12px; margin-top: 8px; border-top: 2px solid rgba(255,255,255,.3); }
   #_print-zone .tag, #_print-zone .tag-profit, #_print-zone .tag-loss, #_print-zone .tag-even { display: inline-block !important; }
-  #_print-zone {
-    width: 100%;
-    padding: 32px 40px;
-    font-family: -apple-system, 'Microsoft JhengHei', sans-serif;
-    background: #fff;
-    page-break-inside: avoid;
-    page-break-after: avoid;
-    page-break-before: avoid;
-  }
-  #_print-zone ._print-title { text-align: center; font-size: 20px; font-weight: 900; color: #1e3a5f; margin-bottom: 4px; page-break-after: avoid; }
-  #_print-zone ._print-sub { text-align: center; font-size: 12px; color: #888; margin-bottom: 20px; page-break-after: avoid; }
-  #_print-zone ._print-disclaimer { text-align: center; font-size: 11px; color: #aaa; margin-top: 16px; padding-top: 12px; border-top: 1px solid #e2e8f0; page-break-before: avoid; page-break-inside: avoid; }
-  #_print-zone p { page-break-inside: avoid; page-break-before: avoid; }
-  #_print-zone .instant-result { background: #1e3a5f !important; color: #fff !important; border-radius: 8px; padding: 16px; -webkit-print-color-adjust: exact; print-color-adjust: exact; page-break-inside: avoid; }
-  #_print-zone .ir-row { justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,.15); }
-  #_print-zone .ir-total { justify-content: center; flex-direction: column; align-items: center; padding-top: 12px; margin-top: 8px; border-top: 2px solid rgba(255,255,255,.3); }
-  #_print-zone .breakeven-box { background: #fefce8 !important; border: 2px solid #fde047; border-radius: 8px; padding: 12px; text-align: center; margin-top: 12px; -webkit-print-color-adjust: exact; print-color-adjust: exact; page-break-inside: avoid; page-break-before: avoid; }
+  #_print-zone .instant-result { background: #1e3a5f !important; color: #fff !important; border-radius: 8px; padding: 16px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #_print-zone .breakeven-box { background: #fefce8 !important; border: 2px solid #fde047; border-radius: 8px; padding: 12px; text-align: center; margin-top: 12px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   #_print-zone .tag-profit { background: #dcfce7 !important; color: #15803d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   #_print-zone .tag-loss { background: #fee2e2 !important; color: #dc2626 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
@@ -144,11 +136,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei
 <body>
 
 <div class="header">
-  <h1>🏠 房地稅務與房貸試算</h1>
+  <h1>🏠 房地稅務試算</h1>
   <div class="tabs">
     <div class="tab active" onclick="switchTab('tab-new')">新制合一稅</div>
     <div class="tab" onclick="switchTab('tab-old')">舊制所得稅</div>
-    <div class="tab" onclick="switchTab('tab-loan')">房貸試算</div>
     <div class="tab" onclick="switchTab('tab-info')">稅率說明</div>
     <div class="tab" onclick="switchTab('tab-contact')">聯繫作者</div>
   </div>
@@ -223,9 +214,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei
     <div class="form-group"><label>代書費(萬)</label><input type="number" id="s-sellScrivener" placeholder="0" oninput="simUpdate()"></div>
     <div class="form-group"><label>廣告費(萬)</label><input type="number" id="s-sellAd" placeholder="0" oninput="simUpdate()"></div>
   </div>
-  <div class="form-row">
-    <div class="form-group"><label>土地增值稅(萬)</label><input type="number" id="s-sellLandTax" placeholder="0" oninput="simUpdate()"></div>
-    <div class="form-group"><label>其他費用(萬)</label><input type="number" id="s-sellOther" placeholder="0" oninput="simUpdate()"></div>
+  <div class="form-group"><label>其他費用(萬)</label><input type="number" id="s-sellOther" placeholder="0" oninput="simUpdate()"></div>
+  </div>
+
+  <div class="form-group">
+    <label>土地漲價總數額（萬）</label>
+    <input type="number" id="s-landIncrement" placeholder="0" step="0.01" oninput="simUpdate()">
+    <p class="help-text">依土地稅法以公告土地現值計算之土地漲價總數額，可自所得中扣除。</p>
   </div>
 </div>
 
@@ -390,52 +385,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei
   </div>
 </div>
 
-<!-- ===================== TAB: 房貸試算 ===================== -->
-
-<div id="tab-loan" class="panel">
-  <div class="card">
-    <div class="card-title">🏦 房貸資訊</div>
-    <div class="form-row">
-      <div class="form-group"><label>貸款金額(萬)</label><input type="number" id="l-amount" placeholder="例：1000"></div>
-      <div class="form-group"><label>年利率(%)</label><input type="number" id="l-rate" placeholder="例：2.1" step="0.01"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>年限(年)</label><input type="number" id="l-years" placeholder="例：30"></div>
-      <div class="form-group"><label>寬限期(月)</label><input type="number" id="l-grace" placeholder="0" value="0"></div>
-    </div>
-    <div class="form-group">
-      <label>方式</label>
-      <select id="l-method">
-        <option value="equalPayment">本息均攤</option>
-        <option value="equalPrincipal">本金均攤</option>
-      </select>
-    </div>
-
-```
-<div class="collapsible-header" onclick="toggleSection(this)">
-  <span class="arrow">▶</span> 段式利率(選填)
-</div>
-<div class="collapsible-body">
-  <div class="form-row">
-    <div class="form-group"><label>第二段利率(%)</label><input type="number" id="l-rate2" placeholder="例：2.5" step="0.01"></div>
-    <div class="form-group"><label>起始期(期)</label><input type="number" id="l-rate2Start" placeholder="例：25"></div>
-  </div>
-</div>
-```
-
-  </div>
-
-  <div class="btn-group">
-    <button class="btn btn-primary" onclick="calcLoan()">計算</button>
-    <button class="btn btn-outline" onclick="clearLoan()">清除</button>
-    <button class="btn btn-success" onclick="exportLoan()">匯出 CSV</button>
-  </div>
-
-  <div id="loan-result"></div>
-</div>
-
-<!-- ===================== TAB: 稅率說明 ===================== -->
-
 <div id="tab-info" class="panel">
   <div class="card">
     <div class="card-title">📊 新制：房地合一稅2.0</div>
@@ -552,7 +501,7 @@ function switchTab(id) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const tabs = document.querySelectorAll('.tab');
-  const ids = ['tab-new','tab-old','tab-loan','tab-info','tab-contact'];
+  const ids = ['tab-new','tab-old','tab-info','tab-contact'];
   tabs[ids.indexOf(id)].classList.add('active');
 }
 
@@ -616,10 +565,12 @@ function getNewTaxRate(years, identity) {
   return 0.15;
 }
 
-function calcNewCore(buyPrice, sellPrice, buyCosts, sellCosts, dateAcq, dateSell, identity) {
-  const totalBuyCost = buyPrice + buyCosts;
+function calcNewCore(buyPrice, sellPrice, buyCosts, sellCosts, dateAcq, dateSell, identity, landIncrement) {
+  const totalBuyCost  = buyPrice + buyCosts;
   const totalSellCost = sellCosts;
-  const gain = sellPrice - totalBuyCost - totalSellCost;
+  const landInc       = landIncrement || 0;
+  // 獲利 = 賣價 - 買入成本 - 賣出費用 - 土地漲價數額
+  const gain = sellPrice - totalBuyCost - totalSellCost - landInc;
   const years = getHoldingYears(dateAcq, dateSell);
   const rate = getNewTaxRate(years, identity);
 
@@ -632,7 +583,7 @@ function calcNewCore(buyPrice, sellPrice, buyCosts, sellCosts, dateAcq, dateSell
   const tax = taxableGain > 0 ? taxableGain * rate : 0;
   const netProfit = gain - tax;
 
-  return { totalBuyCost, totalSellCost, gain, years, rate, exemption, taxableGain, tax, netProfit, sellPrice };
+  return { totalBuyCost, totalSellCost, gain, years, rate, exemption, taxableGain, tax, netProfit, sellPrice, landInc };
 }
 
 function calcNew() {}
@@ -833,29 +784,190 @@ function getInheritWeightedYears(dateSell) {
 }
 
 function printResult() {
-  const result = document.getElementById('s-instantResult');
+  const result    = document.getElementById('s-instantResult');
   const unitPrice = document.getElementById('s-sliderDisplay').textContent;
-  const identity = document.getElementById('s-identity');
+  const identity  = document.getElementById('s-identity');
   const identityText = identity ? identity.options[identity.selectedIndex].text : '';
+  const params    = simGetParams();
+  const sliderVal = parseFloat(document.getElementById('s-slider').value) || 0;
+  const r         = sliderVal > 0 ? simCalcForUnitPrice(sliderVal, params) : {};
+  const netIncome = (r.netProfit !== undefined) ? r.netProfit : 0;
+  const sellAgentFee = r.sellAgentFee || 0;
 
-  let printDiv = document.getElementById('_print-zone');
-  if (!printDiv) {
-    printDiv = document.createElement('div');
-    printDiv.id = '_print-zone';
-    printDiv.style.display = 'none';
-    document.body.appendChild(printDiv);
+  const allRows = [
+    ['買入總價',       params.buyPrice],
+    ['契稅',           v('s-buyDeed')],
+    ['印花稅',         v('s-buyStamp')],
+    ['代書費（買）',   v('s-buyScrivener')],
+    ['規費',           v('s-buyRegFee')],
+    ['仲介費（買）',   v('s-buyAgent')],
+    ['裝修/整地',      v('s-buyReno')],
+    ['其他買入成本',   v('s-buyOther')],
+    ['仲介費（賣）',   sellAgentFee],
+    ['代書費（賣）',   v('s-sellScrivener')],
+    ['廣告費',         v('s-sellAd')],
+    ['其他賣出費用',   v('s-sellOther')],
+    ['土地漲價總數額', v('s-landIncrement')],
+    ['房地合一稅',     r.tax || 0],
+  ].filter(function(x){ return x[1] > 0; });
+
+  // 買入/賣出成本分組
+  var buyItems  = ['買入總價','契稅','印花稅','代書費（買）','規費','仲介費（買）','裝修/整地','其他買入成本'];
+  var sellItems = ['仲介費（賣）','代書費（賣）','廣告費','其他賣出費用','土地漲價總數額'];
+
+  var buyRows2  = allRows.filter(function(x){ return buyItems.indexOf(x[0]) >= 0 && x[0] !== '買入總價'; });
+  var buyTotal  = allRows.filter(function(x){ return x[0] === '買入總價'; });
+  var sellRows2 = allRows.filter(function(x){ return sellItems.indexOf(x[0]) >= 0; });
+  var taxRows   = allRows.filter(function(x){ return x[0] === '房地合一稅'; });
+
+  var hd1 = 'padding:6px 10px;font-size:12px;font-weight:700;border:1px solid #ccc;';
+  var hd2 = 'padding:6px 10px;font-size:12px;font-weight:700;border:1px solid #ccc;text-align:right;';
+  var td1 = 'padding:5px 10px;font-size:12px;border:1px solid #ddd;width:28%;';
+  var td2 = 'padding:5px 10px;font-size:12px;border:1px solid #ddd;text-align:right;font-weight:600;width:18%;';
+
+  function twoCol(rows) {
+    var s = '';
+    for (var i = 0; i < rows.length; i += 2) {
+      s += '<tr>';
+      s += '<td style="' + td1 + '">' + rows[i][0] + '</td>';
+      s += '<td style="' + td2 + '">' + fmt(rows[i][1]) + ' 萬</td>';
+      if (rows[i+1]) {
+        s += '<td style="' + td1 + '">' + rows[i+1][0] + '</td>';
+        s += '<td style="' + td2 + '">' + fmt(rows[i+1][1]) + ' 萬</td>';
+      } else {
+        s += '<td style="border:1px solid #ddd;"></td><td style="border:1px solid #ddd;"></td>';
+      }
+      s += '</tr>';
+    }
+    return s;
   }
 
-  printDiv.innerHTML = `
-    <div class="_print-title">🏠 房地合一稅試算結果</div>
-    <div class="_print-sub">${identityText}　｜　賣出單價 ${unitPrice}</div>
-    ${result ? result.innerHTML : ''}
+  var p2 = '<div style="font-family:Microsoft JhengHei,sans-serif;padding:20px;">';
+  p2 += '<h3 style="margin:0 0 10px;font-size:14px;color:#1e3a5f;">📋 各項費用明細</h3>';
+  p2 += '<table style="width:100%;border-collapse:collapse;font-size:12px;">';
+
+  // 買入成本標題
+  p2 += '<tr style="background:#1e3a5f;"><td colspan="4" style="' + hd1 + 'color:#fff;">🏠 買入成本</td></tr>';
+
+  // 買入總價
+  buyTotal.forEach(function(x) {
+    p2 += '<tr style="background:#e2e8f0;">';
+    p2 += '<td colspan="3" style="' + hd1 + '">' + x[0] + '</td>';
+    p2 += '<td style="' + hd2 + '">' + fmt(x[1]) + ' 萬</td>';
+    p2 += '</tr>';
+  });
+  p2 += twoCol(buyRows2);
+
+  // 賣出成本標題
+  p2 += '<tr style="background:#1e3a5f;"><td colspan="4" style="' + hd1 + 'color:#fff;">💰 賣出費用</td></tr>';
+  p2 += twoCol(sellRows2);
+
+  // 房地合一稅
+  taxRows.forEach(function(x) {
+    p2 += '<tr style="background:#fee2e2;">';
+    p2 += '<td colspan="3" style="' + hd1 + '">' + x[0] + '</td>';
+    p2 += '<td style="' + hd2 + 'color:#dc2626;">' + fmt(x[1]) + ' 萬</td>';
+    p2 += '</tr>';
+  });
+
+  // 賣出總價
+  p2 += '<tr style="background:#dbeafe;">';
+  p2 += '<td colspan="3" style="' + hd1 + 'color:#1e3a5f;">賣出總價</td>';
+  p2 += '<td style="' + hd2 + 'color:#1e3a5f;">' + fmt(r.sellPrice || 0) + ' 萬</td>';
+  p2 += '</tr>';
+
+  // 稅後淨收
+  var nc = netIncome >= 0 ? '#15803d' : '#dc2626';
+  p2 += '<tr style="background:#dcfce7;">';
+  p2 += '<td colspan="3" style="' + hd1 + 'color:' + nc + ';">稅後淨收</td>';
+  p2 += '<td style="' + hd2 + 'color:' + nc + ';">' + fmt(netIncome) + ' 萬</td>';
+  p2 += '</tr>';
+
+  p2 += '</table>';
+  p2 += '<p style="text-align:center;font-size:11px;color:#aaa;margin-top:10px;">⚠️ 稅務試算僅供參考，實際金額以稅單金額為主</p>';
+  p2 += '</div>';
+
+  // 第一頁：試算結果
+  var p1 = '<div style="font-family:Microsoft JhengHei,sans-serif;page-break-after:always;">';
+  p1 += '<h2 style="text-align:center;font-size:16px;margin:0 0 4px;color:#1e3a5f;">🏠 房地合一稅試算結果</h2>';
+  p1 += '<p style="text-align:center;font-size:12px;color:#888;margin:0 0 12px;">' + identityText + '　｜　賣出單價 ' + unitPrice + '</p>';
+  p1 += (result ? result.innerHTML : '');
+  p1 += '</div>';
+
+  var pz = document.getElementById('_print-zone');
+  if (!pz) { pz = document.createElement('div'); pz.id = '_print-zone'; document.body.appendChild(pz); }
+
+  pz.innerHTML = p1 + p2;
+
+  setTimeout(function() {
+    window.print();
+    setTimeout(function() { pz.innerHTML = ''; }, 1000);
+  }, 300);
+}
+function getLandExtraTax() {
+  const announced = v('s-landAnnounced');
+  const declared  = v('s-landDeclared') || announced;
+  const origPrice = v('s-landOrigPrice');
+  const cpi       = v('s-landCPI') || 1;
+  const taxRate   = (v('s-landTaxRate') || 20) / 100;
+  if (!announced || !origPrice) return 0;
+  const adjOrig       = origPrice * cpi;
+  const incAnnounced  = Math.max(0, announced - adjOrig);
+  const incDeclared   = Math.max(0, declared  - adjOrig);
+  const taxAnnounced  = incAnnounced * taxRate;
+  const taxDeclared   = incDeclared  * taxRate;
+  return Math.max(0, taxDeclared - taxAnnounced);
+}
+
+function calcLandTax() {
+  const announced  = v('s-landAnnounced');   // 公告土地現值
+  const declared   = v('s-landDeclared');    // 申報移轉現值
+  const origPrice  = v('s-landOrigPrice');   // 原始取得地價
+  const cpi        = v('s-landCPI') || 1;   // 物價指數倍數
+  const taxRate    = (v('s-landTaxRate') || 20) / 100;
+  const resultBox  = document.getElementById('land-calc-result');
+
+  if (!announced || !origPrice) {
+    resultBox.style.display = 'none';
+    return;
+  }
+
+  const adjOrigPrice = origPrice * cpi;  // 調整後原始取得地價
+
+  // 以公告土地現值計算（房地合一稅只能扣這個）
+  const incAnnounced = Math.max(0, announced - adjOrigPrice);
+  const taxAnnounced = incAnnounced * taxRate;
+
+  // 以申報移轉現值計算（實際繳納）
+  const decl = declared || announced;
+  const incDeclared  = Math.max(0, decl - adjOrigPrice);
+  const taxDeclared  = incDeclared * taxRate;
+
+  // 多繳稅額（可列為費用）
+  const extraTax = Math.max(0, taxDeclared - taxAnnounced);
+  // 用公式驗算：[(申報 - 公告) / 申報漲價數額] × 已納稅
+  const extraTaxFormula = incDeclared > 0
+    ? ((decl - announced) / incDeclared) * taxDeclared
+    : 0;
+
+  // 自動填入土地漲價總數額欄位
+  document.getElementById('s-landIncrement').value = fmt(incAnnounced);
+
+  resultBox.style.display = 'block';
+  resultBox.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div><span style="color:#64748b;">調整後原始地價</span><br><strong>${fmt(adjOrigPrice)} 萬</strong></div>
+      <div><span style="color:#64748b;">公告現值漲價總數額</span><br><strong>${fmt(incAnnounced)} 萬</strong></div>
+      <div><span style="color:#64748b;">已納土地增值稅</span><br><strong>${fmt(taxDeclared)} 萬</strong></div>
+      <div><span style="color:#64748b;">可扣除土地漲價數額</span><br><strong style="color:#1d4ed8;">${fmt(incAnnounced)} 萬</strong></div>
+      ${extraTax > 0.001 ? `
+      <div style="grid-column:1/-1;background:#fef3c7;border-radius:6px;padding:8px;margin-top:4px;">
+        ⚠️ 申報現值高於公告現值，多繳土地增值稅 <strong style="color:#b45309;">${fmt(extraTax)} 萬</strong> 可列為費用扣除
+      </div>` : ''}
+    </div>
   `;
 
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => { printDiv.innerHTML = ''; }, 1000);
-  }, 300);
+  simUpdate();
 }
 
 /* ========== 單價試算 ========== */
@@ -867,11 +979,12 @@ function simGetParams() {
   const ping       = v('s-ping');
   const buyCosts   = v('s-buyDeed') + v('s-buyStamp') + v('s-buyScrivener') + v('s-buyRegFee') + v('s-buyAgent') + v('s-buyReno') + v('s-buyOther');
   const sellAgentRate  = v('s-sellAgentRate') / 100;
-  const sellFixedCosts = v('s-sellScrivener') + v('s-sellAd') + v('s-sellLandTax') + v('s-sellOther');
+  const sellFixedCosts = v('s-sellScrivener') + v('s-sellAd') + v('s-sellOther');
+  const landIncrement  = v('s-landIncrement');
   // 繼承時取得加權平均稅率（跨持分）
   const inheritRate = identity === 'inherit' ? getInheritEffectiveRate(dateSell) : null;
 
-  return { dateAcq, dateSell, identity, buyPrice, ping, buyCosts, sellAgentRate, sellFixedCosts, inheritRate };
+  return { dateAcq, dateSell, identity, buyPrice, ping, buyCosts, sellAgentRate, sellFixedCosts, landIncrement, inheritRate };
 }
 
 function simCalcForUnitPrice(unitPrice, params) {
@@ -896,7 +1009,7 @@ function simCalcForUnitPrice(unitPrice, params) {
     return { sellPrice, sellAgentFee, totalSellCost: totalSellCosts, totalBuyCost: effectiveCost, gain, years, rate: params.inheritRate, exemption:0, taxableGain: gain, tax, netProfit, valid: true };
   }
 
-  const r = calcNewCore(params.buyPrice, sellPrice, params.buyCosts, totalSellCosts, params.dateAcq, params.dateSell, params.identity);
+  const r = calcNewCore(params.buyPrice, sellPrice, params.buyCosts, totalSellCosts, params.dateAcq, params.dateSell, params.identity, params.landIncrement);
   return { ...r, sellAgentFee, valid: true };
 }
 
@@ -1011,6 +1124,7 @@ function simRender(unitPrice) {
       <div class="ir-row"><span class="ir-label">${buyCostLabel}</span><span class="ir-value">${fmt(buyCostValue)} 萬</span></div>
       <div class="ir-row"><span class="ir-label">仲介費(賣)</span><span class="ir-value">${fmt(r.sellAgentFee)} 萬</span></div>
       <div class="ir-row"><span class="ir-label">賣出費用合計</span><span class="ir-value">${fmt(r.totalSellCost)} 萬</span></div>
+      ${r.landInc > 0 ? `<div class="ir-row"><span class="ir-label">土地漲價總數額</span><span class="ir-value">−${fmt(r.landInc)} 萬</span></div>` : ''}
       ${r.valid ? `
       <div class="ir-row"><span class="ir-label">持有期間</span><span class="ir-value">${r.years.toFixed(2)} 年${isInherit ? '（含合併計算）' : ''}</span></div>
       <div class="ir-row"><span class="ir-label">適用稅率${isInherit ? '（加權平均）' : ''}</span><span class="ir-value">${(r.rate*100).toFixed(0)}%</span></div>
@@ -1615,13 +1729,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-```
 <script>
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/Tools/sw.js');
     }
 </script>
-```
 
 </body>
 </html>
