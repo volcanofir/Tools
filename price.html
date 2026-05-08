@@ -285,12 +285,6 @@ background: #fff !important;
 .print-only { display: none; }
 .print-disclaimer { display: none; }
 </style>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="試算工具">
-<meta name="theme-color" content="#1e3a5f">
-<link rel="manifest" href="/Tools/manifest.json">
-<link rel="apple-touch-icon" href="/Tools/icon-192.png">
 
 </head>
 <body>
@@ -353,7 +347,7 @@ background: #fff !important;
       <div class="hplan-title">▸ 方案 A</div>
       <div class="hfields">
         <div class="hf"><span class="hl">承購</span><span class="hv" id="n_priceA">—</span></div>
-        <div class="hf"><span class="hl">成數</span><select id="n_ratioA" onchange="calcNo()"><option value="0.3">30%</option><option value="0.4">40%</option><option value="0.5">50%</option><option value="0.6">60%</option><option value="0.7" selected>70%</option><option value="0.8">80%</option></select></div>
+        <div class="hf"><span class="hl">成數</span><input type="number" id="n_ratioA" value="70" min="1" max="99" step="1" style="width:70px;text-align:center;" oninput="calcNo()"><span class="hl">%</span></div>
         <div class="hf"><span class="hl">貸款</span><span class="hv" id="n_loanA">—</span></div>
         <div class="hf"><span class="hl">自備</span><span class="hv" id="n_downA">—</span></div>
         <div class="hf"><span class="hl">年限</span><select id="n_yearsA" onchange="calcNo()"><option value="20">20年</option><option value="30" selected>30年</option><option value="40">40年</option></select></div>
@@ -366,7 +360,7 @@ background: #fff !important;
       <div class="hplan-title">▸ 方案 B</div>
       <div class="hfields">
         <div class="hf"><span class="hl">承購</span><span class="hv" id="n_priceB">—</span></div>
-        <div class="hf"><span class="hl">成數</span><select id="n_ratioB" onchange="calcNo()"><option value="0.3">30%</option><option value="0.4">40%</option><option value="0.5">50%</option><option value="0.6" selected>60%</option><option value="0.7">70%</option><option value="0.8">80%</option></select></div>
+        <div class="hf"><span class="hl">成數</span><input type="number" id="n_ratioB" value="60" min="1" max="99" step="1" style="width:70px;text-align:center;" oninput="calcNo()"><span class="hl">%</span></div>
         <div class="hf"><span class="hl">貸款</span><span class="hv" id="n_loanB">—</span></div>
         <div class="hf"><span class="hl">自備</span><span class="hv" id="n_downB">—</span></div>
         <div class="hf"><span class="hl">年限</span><select id="n_yearsB" onchange="calcNo()"><option value="20">20年</option><option value="30" selected>30年</option><option value="40">40年</option></select></div>
@@ -381,7 +375,7 @@ background: #fff !important;
     <div class="tbar gold-bar"><span>單價試算（無車位）</span><span id="n_info">坪數：22.26 坪</span></div>
     <div class="tscroll">
       <table><thead class="gold-head"><tr>
-        <th>單價（萬/坪）</th><th>坪數</th><th>房屋總價（萬）</th><th>2成自備款</th><th>3成自備款</th>
+        <th>單價（萬/坪）</th><th>坪數</th><th>房屋總價（萬）</th><th id="n_th_A">自備款A</th><th id="n_th_B">自備款B</th>
       </tr></thead><tbody id="n_tbody"></tbody></table>
     </div>
     <div class="print-disclaimer" style="text-align:center;font-size:11px;color:#888;margin-top:10px;font-family:'DM Mono',monospace;">相關數據資料，僅供購屋規劃參考。最終核貸條件以銀行核定為主</div>
@@ -415,7 +409,7 @@ background: #fff !important;
       <div class="hplan-title">▸ 方案 A（含車位）</div>
       <div class="hfields">
         <div class="hf"><span class="hl">承購</span><span class="hv" id="p_priceA">—</span></div>
-        <div class="hf"><span class="hl">成數</span><select id="p_ratioA" onchange="calcWith()"><option value="0.3">30%</option><option value="0.4">40%</option><option value="0.5">50%</option><option value="0.6">60%</option><option value="0.7" selected>70%</option><option value="0.8">80%</option></select></div>
+        <div class="hf"><span class="hl">成數</span><input type="number" id="p_ratioA" value="70" min="1" max="99" step="1" style="width:70px;text-align:center;" oninput="calcWith()"><span class="hl">%</span></div>
         <div class="hf"><span class="hl">貸款</span><span class="hv" id="p_loanA">—</span></div>
         <div class="hf"><span class="hl">自備</span><span class="hv" id="p_downA">—</span></div>
         <div class="hf"><span class="hl">年限</span><select id="p_yearsA" onchange="calcWith()"><option value="20">20年</option><option value="30" selected>30年</option><option value="40">40年</option></select></div>
@@ -428,7 +422,7 @@ background: #fff !important;
       <div class="hplan-title">▸ 方案 B（含車位）</div>
       <div class="hfields">
         <div class="hf"><span class="hl">承購</span><span class="hv" id="p_priceB">—</span></div>
-        <div class="hf"><span class="hl">成數</span><select id="p_ratioB" onchange="calcWith()"><option value="0.3">30%</option><option value="0.4">40%</option><option value="0.5">50%</option><option value="0.6" selected>60%</option><option value="0.7">70%</option><option value="0.8">80%</option></select></div>
+        <div class="hf"><span class="hl">成數</span><input type="number" id="p_ratioB" value="60" min="1" max="99" step="1" style="width:70px;text-align:center;" oninput="calcWith()"><span class="hl">%</span></div>
         <div class="hf"><span class="hl">貸款</span><span class="hv" id="p_loanB">—</span></div>
         <div class="hf"><span class="hl">自備</span><span class="hv" id="p_downB">—</span></div>
         <div class="hf"><span class="hl">年限</span><select id="p_yearsB" onchange="calcWith()"><option value="20">20年</option><option value="30" selected>30年</option><option value="40">40年</option></select></div>
@@ -443,7 +437,7 @@ background: #fff !important;
     <div class="tbar navy-bar"><span>單價試算（有車位）</span><span id="p_info">坪數：22.26 坪 ｜ 車位：150 萬</span></div>
     <div class="tscroll">
       <table><thead class="navy-head"><tr>
-        <th>單坪價格</th><th>房屋總價</th><th>車位（萬）</th><th>合計總價（萬）</th><th>2成自備款</th><th>3成自備款</th>
+        <th>單坪價格</th><th>房屋總價</th><th>車位（萬）</th><th>合計總價（萬）</th><th id="p_th_A">自備款A</th><th id="p_th_B">自備款B</th>
       </tr></thead><tbody id="p_tbody"></tbody></table>
     </div>
     <div class="print-disclaimer" style="text-align:center;font-size:11px;color:#888;margin-top:10px;font-family:'DM Mono',monospace;">相關數據資料，僅供購屋規劃參考。最終核貸條件以銀行核定為主</div>
@@ -556,11 +550,14 @@ function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/
 
 function fillLoans(pfx, total){
   ['A','B'].forEach(x=>{
-    const r=v(pfx+'ratio'+x), y=iv(pfx+'years'+x), ir=v(pfx+'rate'+x);
-    const loan=Math.round(total*r), down=total-loan;
+    const r  = v(pfx+'ratio'+x) / 100;  // 輸入是 % 整數，除以100
+    const y  = iv(pfx+'years'+x);
+    const ir = v(pfx+'rate'+x);
+    const loan = Math.round(total * r);
+    const down = total - loan;
     set(pfx+'price'+x, fmt(total)+' 萬');
-    set(pfx+'loan'+x, fmt(loan)+' 萬');
-    set(pfx+'down'+x, fmt(down)+' 萬');
+    set(pfx+'loan'+x,  fmt(loan)+' 萬');
+    set(pfx+'down'+x,  fmt(down)+' 萬');
     set(pfx+'monthly'+x, fmt(mp(loan,ir,y))+' 元');
   });
 }
@@ -568,6 +565,10 @@ function fillLoans(pfx, total){
 /* ── 買方 無車位 ── */
 function calcNo(){
   const unit=v('n_unit'), ping=v('n_ping'), total=Math.round(unit*ping);
+  const rA=v('n_ratioA'), rB=v('n_ratioB');
+  // 更新表頭
+  const thA=document.getElementById('n_th_A'); if(thA) thA.textContent=(rA/10)+'成自備款';
+  const thB=document.getElementById('n_th_B'); if(thB) thB.textContent=(rB/10)+'成自備款';
   set('n_total',fmt(total)); set('n_info',`坪數：${ping} 坪`);
   fillLoans('n_',total);
   const tb=document.getElementById('n_tbody'); tb.innerHTML='';
@@ -577,7 +578,8 @@ function calcNo(){
     const t=Math.round(u*ping), ic=u===Math.round(unit);
     const tr=document.createElement('tr');
     tr.className=ic?'crow':((u-s)%2===1?'srow':'');
-    tr.innerHTML=`<td class="pc">${u}${ic?' ◀':''}</td><td>${ping}</td><td class="pc">${fmt(t)}</td><td class="d20">${fmt(Math.round(t*.2))}</td><td class="d30">${fmt(Math.round(t*.3))}</td>`;
+    const rA=v('n_ratioA')/100, rB=v('n_ratioB')/100;
+    tr.innerHTML=`<td class="pc">${u}${ic?' ◀':''}</td><td>${ping}</td><td class="pc">${fmt(t)}</td><td class="d20">${fmt(Math.round(t*rA))}</td><td class="d30">${fmt(Math.round(t*rB))}</td>`;
     tb.appendChild(tr);
   }
 }
@@ -586,6 +588,9 @@ function calcNo(){
 function calcWith(){
   const unit=v('p_unit'), ping=v('p_ping'), park=v('p_park');
   const ut=Math.round(unit*ping), grand=ut+park;
+  const rA=v('p_ratioA'), rB=v('p_ratioB');
+  const thA=document.getElementById('p_th_A'); if(thA) thA.textContent=(rA/10)+'成自備款';
+  const thB=document.getElementById('p_th_B'); if(thB) thB.textContent=(rB/10)+'成自備款';
   set('p_unitTotal',fmt(ut)); set('p_grand',fmt(grand));
   set('bd_u',fmt(ut)); set('bd_p',fmt(park)); set('bd_t',fmt(grand));
   set('p_info',`坪數：${ping} 坪 ｜ 車位：${fmt(park)} 萬`);
@@ -597,7 +602,8 @@ function calcWith(){
     const uT=Math.round(u*ping), g=uT+park, ic=u===Math.round(unit);
     const tr=document.createElement('tr');
     tr.className=ic?'crow':((u-s)%2===1?'srow':'');
-    tr.innerHTML=`<td class="pc">${u}${ic?' ◀':''}</td><td>${fmt(uT)}</td><td>${fmt(park)}</td><td class="pc">${fmt(g)}</td><td class="d20">${fmt(Math.round(g*.2))}</td><td class="d30">${fmt(Math.round(g*.3))}</td>`;
+    const rA2=v('p_ratioA')/100, rB2=v('p_ratioB')/100;
+    tr.innerHTML=`<td class="pc">${u}${ic?' ◀':''}</td><td>${fmt(uT)}</td><td>${fmt(park)}</td><td class="pc">${fmt(g)}</td><td class="d20">${fmt(Math.round(g*rA2))}</td><td class="d30">${fmt(Math.round(g*rB2))}</td>`;
     tb.appendChild(tr);
   }
 }
@@ -728,14 +734,6 @@ function switchSub(grp, i){
 /* ── Init ── */
 calcNo(); calcWith(); buildAno(); buildAyes();
 </script>
-
-
-<script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/Tools/sw.js');
-    }
-</script>
-
 
 </body>
 </html>
