@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tool-cache-v3';
+const CACHE_NAME = 'tool-cache-v4';
 
 const FILES_TO_CACHE = [
   './',
