@@ -286,11 +286,162 @@ background: #fff !important;
 @media screen { #_pdf-zone { display: none !important; } }
 .print-only { display: none; }
 .print-disclaimer { display: none; }
+@media screen {
+body {
+background:
+  radial-gradient(circle at 8% 0%, rgba(15,118,110,.16), transparent 28rem),
+  linear-gradient(135deg,#f7faf8 0%,#eef5f2 100%);
+color:#10201c;
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei',sans-serif;
+}
+.container {
+max-width:1240px;
+padding:24px;
+background:transparent;
+}
+header {
+text-align:left;
+margin-bottom:18px;
+padding:26px 28px;
+border:1px solid rgba(15,118,110,.18);
+border-radius:18px;
+background:linear-gradient(135deg,#fff,rgba(232,243,239,.88));
+box-shadow:0 16px 42px rgba(16,32,28,.10);
+}
+header::after { display:none; }
+h1 { color:#10201c;font-size:clamp(28px,4vw,42px);letter-spacing:.04em; }
+.subtitle { color:#0f766e;letter-spacing:.12em;font-family:inherit;font-size:13px; }
+.home-link {
+display:inline-flex;
+align-items:center;
+gap:8px;
+margin-bottom:14px;
+padding:8px 12px;
+border:1px solid #cfe0da;
+border-radius:999px;
+background:#fff;
+color:#115e59;
+font-size:14px;
+font-weight:800;
+text-decoration:none;
+}
+#pdf-btn-wrap {
+display:flex;
+justify-content:flex-end;
+align-items:center;
+gap:12px;
+margin-bottom:14px !important;
+}
+#pdf-btn-wrap button {
+background:#0f766e !important;
+color:#fff !important;
+border-radius:999px !important;
+box-shadow:0 10px 24px rgba(15,118,110,.18);
+}
+#pdf-btn-wrap div { text-align:right;max-width:360px; }
+.tab-nav,.sub-nav {
+border:1px solid #cfe0da;
+border-radius:14px;
+background:#fff;
+box-shadow:0 12px 30px rgba(16,32,28,.08);
+padding:5px;
+gap:5px;
+}
+.tab-btn,.sub-btn {
+border:0 !important;
+border-radius:10px;
+background:transparent;
+color:#52645e;
+font-family:inherit;
+letter-spacing:.03em;
+}
+.tab-btn.active,.sub-btn.gold-active,.sub-btn.sage-active {
+background:#10201c;
+color:#fff;
+box-shadow:0 8px 18px rgba(16,32,28,.16);
+}
+.card,.hcard,.tsect {
+border:1px solid #d7e1dc;
+border-radius:14px;
+background:#fff;
+box-shadow:0 12px 32px rgba(16,32,28,.08);
+}
+.card { padding:20px; }
+.hcard { overflow:hidden; }
+.hplan-divider { background:#d7e1dc;width:1px; }
+.hplan-title,label,.hl,.slbl,.rmk-lbl {
+color:#115e59;
+font-family:inherit;
+letter-spacing:.03em;
+}
+input[type="number"],input[type="text"],select,.unit-readonly-disp {
+border:1px solid #cfe0da;
+border-radius:10px;
+background:#fbfdfc;
+font-family:inherit;
+font-weight:700;
+}
+input:focus,select:focus {
+border-color:#0f766e;
+box-shadow:0 0 0 4px rgba(15,118,110,.12);
+}
+.tdisp {
+background:#10201c;
+border-radius:10px;
+}
+.tbar.gold-bar,.tbar.navy-bar,.tbar.sage-bar {
+background:#10201c;
+color:#d9f99d;
+}
+thead.gold-head th,thead.navy-head th,thead.sage-head th {
+background:#e8f3ef;
+color:#10201c;
+}
+thead th { border-bottom:1px solid #d7e1dc; }
+tbody tr:nth-child(even) { background:#f7faf8; }
+tbody tr:hover { background:#edf7f3; }
+.mode-toggle,.rmk-del {
+border-color:#cfe0da;
+border-radius:10px;
+}
+.mode-btn {
+border-color:#cfe0da;
+background:#f4f7f5;
+color:#115e59;
+}
+.mode-btn.active,.add-rmk:hover {
+background:#0f766e;
+color:#fff;
+}
+.add-rmk {
+border-color:#0f766e;
+border-radius:10px;
+color:#0f766e;
+}
+.footer-note { color:#66746f; }
+}
+@media screen and (max-width:760px){
+.container{padding:14px;}
+header{padding:22px 18px;}
+#pdf-btn-wrap{display:block;text-align:left !important;}
+#pdf-btn-wrap div{text-align:left;margin-top:8px;}
+.tab-nav,.sub-nav{display:grid;}
+.tab-btn,.sub-btn{padding:12px 10px;}
+.g3,.g4,.g5,.g6{grid-template-columns:1fr;}
+.g3 .fg:last-child,.g4 .fg:last-child,.g5 .fg:nth-child(5){grid-column:auto;}
+.hcard{display:block;}
+.hplan-divider{height:1px;width:100%;}
+.hfields{align-items:flex-start;}
+.rmk-entry{grid-template-columns:1fr;}
+.rmk-del{width:100%;}
+tbody td,thead th{padding:10px 8px;font-size:13px;}
+}
 </style>
 
 </head>
 <body>
 <div class="container">
+  <a class="home-link" href="./index.html">回首頁</a>
   <header>
     <h1>價格建議工具</h1>
     <div class="subtitle">PRICE SUGGESTION CALCULATOR</div>

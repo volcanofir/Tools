@@ -125,6 +125,137 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei
   .monthly-hero .mh-value{font-size:2rem}
   .monthly-hero .mh-detail-grid{grid-template-columns:1fr}
 }
+@media screen {
+body{
+background:
+  radial-gradient(circle at 12% 0%,rgba(15,118,110,.16),transparent 26rem),
+  linear-gradient(135deg,#f7faf8 0%,#eef5f2 100%);
+color:#10201c;
+}
+.header{
+position:relative;
+top:auto;
+margin:18px auto 0;
+width:min(1180px,calc(100% - 24px));
+border-radius:18px;
+background:linear-gradient(135deg,#10201c,#0f766e);
+box-shadow:0 18px 48px rgba(16,32,28,.18);
+text-align:left;
+padding:24px;
+}
+.header h1{font-size:clamp(1.55rem,4vw,2.35rem);letter-spacing:.03em;}
+.home-link{
+display:inline-flex;
+align-items:center;
+gap:8px;
+margin-bottom:12px;
+padding:7px 12px;
+border:1px solid rgba(255,255,255,.28);
+border-radius:999px;
+background:rgba(255,255,255,.12);
+color:#fff;
+font-size:14px;
+font-weight:800;
+text-decoration:none;
+}
+.tabs{
+background:rgba(255,255,255,.13);
+border:1px solid rgba(255,255,255,.18);
+padding:5px;
+gap:5px;
+}
+.tab{
+border-radius:9px;
+font-size:.9rem;
+letter-spacing:.02em;
+}
+.tab.active{
+color:#115e59;
+box-shadow:0 8px 18px rgba(0,0,0,.16);
+}
+.container{
+width:min(1180px,calc(100% - 24px));
+margin:0 auto;
+padding:18px 0 36px;
+}
+.card{
+border:1px solid #d7e1dc;
+border-radius:14px;
+box-shadow:0 12px 32px rgba(16,32,28,.08);
+padding:20px;
+}
+.card-title{
+color:#115e59;
+font-size:1.18rem;
+border-bottom:1px solid #e4ece8;
+padding-bottom:12px;
+}
+.form-group label{
+color:#41534d;
+font-weight:800;
+}
+.form-group input,.form-group select{
+border:1px solid #cfe0da;
+border-radius:10px;
+background:#fbfdfc;
+}
+.form-group input:focus,.form-group select:focus{
+border-color:#0f766e;
+box-shadow:0 0 0 4px rgba(15,118,110,.12);
+}
+.btn{border-radius:999px;}
+.btn-primary,.btn-success{
+background:linear-gradient(135deg,#0f766e,#115e59);
+}
+.btn-warning{
+background:linear-gradient(135deg,#b7791f,#92400e);
+}
+.result-box,.breakeven-box,.monthly-hero,.instant-result{
+border-radius:14px;
+box-shadow:0 12px 28px rgba(16,32,28,.08);
+}
+.monthly-hero,.instant-result{
+background:linear-gradient(135deg,#10201c,#0f766e);
+}
+.result-box{
+background:#f8fdfa;
+border-color:#cde7dc;
+}
+.result-box.profit{background:#f0fdf4;border-color:#9ae6b4;}
+.result-box.loss{background:#fff5f5;border-color:#feb2b2;}
+.quick-price-btn{
+border:1px solid #cfe0da;
+border-radius:999px;
+background:#fff;
+}
+.mode-switch{
+background:#edf5f2;
+border:1px solid #d7e1dc;
+}
+.mode-switch .mode-btn.active{
+color:#0f766e;
+}
+.info-table th,.comparison-table th,.amort-table th{
+background:#10201c;
+}
+.comparison-table,.info-table,.amort-table{
+border-radius:10px;
+overflow:hidden;
+}
+}
+@media screen and (min-width:900px){
+.form-row{grid-template-columns:repeat(2,minmax(0,1fr));}
+.form-row-3{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media screen and (max-width:720px){
+.header{width:calc(100% - 20px);padding:20px 16px;margin-top:10px;}
+.tabs{overflow-x:auto;}
+.tab{min-width:92px;white-space:nowrap;}
+.container{width:calc(100% - 20px);padding-top:12px;}
+.card{padding:16px;}
+.result-row{gap:12px;align-items:flex-start;}
+.result-row .value{text-align:right;}
+}
 </style>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -136,7 +267,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei
 <body>
 
 <div class="header">
-  <h1>🏠 房地稅務試算</h1>
+  <a class="home-link" href="./index.html">回首頁</a>
+  <h1>房地稅務試算</h1>
   <div class="tabs">
     <div class="tab active" onclick="switchTab('tab-new')">新制合一稅</div>
     <div class="tab" onclick="switchTab('tab-old')">舊制所得稅</div>
