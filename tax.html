@@ -100,24 +100,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft JhengHei
 .amort-table tfoot tr{position:sticky;bottom:0;z-index:1}
 .amort-table td{padding:6px;border-bottom:1px solid var(--border);text-align:right}
 .amort-table tr:nth-child(even){background:#f8fafc}
-@media screen { #_print-zone { display: none !important; } }
-@media print {
-  body * { display: none !important; }
-  #_print-zone { display: block !important; width: 100%; padding: 24px; font-family: -apple-system,'Microsoft JhengHei',sans-serif; background: #fff; }
-  #_print-zone * { display: revert !important; }
-  #_print-zone table { display: table !important; width: 100%; border-collapse: collapse; }
-  #_print-zone thead { display: table-header-group !important; }
-  #_print-zone tbody { display: table-row-group !important; }
-  #_print-zone tr { display: table-row !important; }
-  #_print-zone td, #_print-zone th { display: table-cell !important; }
-  #_print-zone .ir-row { display: flex !important; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,.15); }
-  #_print-zone .ir-total { display: flex !important; justify-content: center; flex-direction: column; align-items: center; padding-top: 12px; margin-top: 8px; border-top: 2px solid rgba(255,255,255,.3); }
-  #_print-zone .tag, #_print-zone .tag-profit, #_print-zone .tag-loss, #_print-zone .tag-even { display: inline-block !important; }
-  #_print-zone .instant-result { background: #1e3a5f !important; color: #fff !important; border-radius: 8px; padding: 16px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  #_print-zone .breakeven-box { background: #fefce8 !important; border: 2px solid #fde047; border-radius: 8px; padding: 12px; text-align: center; margin-top: 12px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  #_print-zone .tag-profit { background: #dcfce7 !important; color: #15803d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  #_print-zone .tag-loss { background: #fee2e2 !important; color: #dc2626 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-}
 @media(max-width:600px){
   .form-row,.form-row-3{grid-template-columns:1fr}
   .comparison-table{font-size:.75rem}
@@ -370,10 +352,6 @@ overflow:hidden;
   </div>
   <div class="quick-prices" id="s-quickPrices"></div>
   <div id="s-instantResult"></div>
-  <div id="s-print-btn-wrap" style="display:none;margin-top:12px;">
-    <button class="btn btn-warning" onclick="printResult()" style="width:100%;">🖨️ 列印 / 儲存為 PDF</button>
-    <p style="font-size:.75rem;color:var(--text-light);text-align:center;margin-top:6px;">💡 若列印預覽留白過多，可在列印設定中調整<strong>縮放比例</strong>來填滿頁面</p>
-  </div>
 </div>
 
 <div style="margin-top:16px">
@@ -439,10 +417,6 @@ overflow:hidden;
     </div>
     <div class="quick-prices" id="ow-quickPrices"></div>
     <div id="ow-result" style="margin-top:8px;"></div>
-    <div id="ow-print-btn-wrap" style="display:none;margin-top:12px;">
-      <button class="btn btn-warning" onclick="printOwResult()" style="width:100%;">🖨️ 列印淨收試算結果</button>
-      <p style="font-size:.75rem;color:var(--text-light);text-align:center;margin-top:6px;">💡 若列印預覽留白過多，可在列印設定中調整<strong>縮放比例</strong>來填滿頁面</p>
-    </div>
   </div>
 
   <div class="card">
@@ -511,10 +485,6 @@ overflow:hidden;
     <button class="btn btn-success" onclick="exportOld()">匯出 CSV</button>
   </div>
   <div id="old-result"></div>
-  <div id="old-print-btn-wrap" style="display:none;margin-top:12px;">
-    <button class="btn btn-warning" onclick="printOldResult()" style="width:100%;">🖨️ 列印 / 儲存為 PDF</button>
-    <p style="font-size:.75rem;color:var(--text-light);text-align:center;margin-top:6px;">💡 若列印預覽留白過多，可在列印設定中調整<strong>縮放比例</strong>來填滿頁面</p>
-  </div>
 </div>
 
 <div id="tab-info" class="panel">
@@ -915,127 +885,6 @@ function getInheritWeightedYears(dateSell) {
   return weightedYears / totalRatio;
 }
 
-function printResult() {
-  const result    = document.getElementById('s-instantResult');
-  const unitPrice = document.getElementById('s-sliderDisplay').textContent;
-  const identity  = document.getElementById('s-identity');
-  const identityText = identity ? identity.options[identity.selectedIndex].text : '';
-  const params    = simGetParams();
-  const sliderVal = parseFloat(document.getElementById('s-slider').value) || 0;
-  const r         = sliderVal > 0 ? simCalcForUnitPrice(sliderVal, params) : {};
-  const netIncome = (r.netProfit !== undefined) ? r.netProfit : 0;
-  const sellAgentFee = r.sellAgentFee || 0;
-
-  const allRows = [
-    ['買入總價',       params.buyPrice],
-    ['契稅',           v('s-buyDeed')],
-    ['印花稅',         v('s-buyStamp')],
-    ['代書費（買）',   v('s-buyScrivener')],
-    ['規費',           v('s-buyRegFee')],
-    ['仲介費（買）',   v('s-buyAgent')],
-    ['裝修/整地',      v('s-buyReno')],
-    ['其他買入成本',   v('s-buyOther')],
-    ['仲介費（賣）',   sellAgentFee],
-    ['代書費（賣）',   v('s-sellScrivener')],
-    ['廣告費',         v('s-sellAd')],
-    ['其他賣出費用',   v('s-sellOther')],
-    ['土地漲價總數額', v('s-landIncrement')],
-    ['房地合一稅',     r.tax || 0],
-  ].filter(function(x){ return x[1] > 0; });
-
-  // 買入/賣出成本分組
-  var buyItems  = ['買入總價','契稅','印花稅','代書費（買）','規費','仲介費（買）','裝修/整地','其他買入成本'];
-  var sellItems = ['仲介費（賣）','代書費（賣）','廣告費','其他賣出費用','土地漲價總數額'];
-
-  var buyRows2  = allRows.filter(function(x){ return buyItems.indexOf(x[0]) >= 0 && x[0] !== '買入總價'; });
-  var buyTotal  = allRows.filter(function(x){ return x[0] === '買入總價'; });
-  var sellRows2 = allRows.filter(function(x){ return sellItems.indexOf(x[0]) >= 0; });
-  var taxRows   = allRows.filter(function(x){ return x[0] === '房地合一稅'; });
-
-  var hd1 = 'padding:6px 10px;font-size:12px;font-weight:700;border:1px solid #ccc;';
-  var hd2 = 'padding:6px 10px;font-size:12px;font-weight:700;border:1px solid #ccc;text-align:right;';
-  var td1 = 'padding:5px 10px;font-size:12px;border:1px solid #ddd;width:28%;';
-  var td2 = 'padding:5px 10px;font-size:12px;border:1px solid #ddd;text-align:right;font-weight:600;width:18%;';
-
-  function twoCol(rows) {
-    var s = '';
-    for (var i = 0; i < rows.length; i += 2) {
-      s += '<tr>';
-      s += '<td style="' + td1 + '">' + rows[i][0] + '</td>';
-      s += '<td style="' + td2 + '">' + fmt(rows[i][1]) + ' 萬</td>';
-      if (rows[i+1]) {
-        s += '<td style="' + td1 + '">' + rows[i+1][0] + '</td>';
-        s += '<td style="' + td2 + '">' + fmt(rows[i+1][1]) + ' 萬</td>';
-      } else {
-        s += '<td style="border:1px solid #ddd;"></td><td style="border:1px solid #ddd;"></td>';
-      }
-      s += '</tr>';
-    }
-    return s;
-  }
-
-  var p2 = '<div style="font-family:Microsoft JhengHei,sans-serif;padding:20px;">';
-  p2 += '<h3 style="margin:0 0 10px;font-size:14px;color:#1e3a5f;">📋 各項費用明細</h3>';
-  p2 += '<table style="width:100%;border-collapse:collapse;font-size:12px;">';
-
-  // 買入成本標題
-  p2 += '<tr style="background:#1e3a5f;"><td colspan="4" style="' + hd1 + 'color:#fff;">🏠 買入成本</td></tr>';
-
-  // 買入總價
-  buyTotal.forEach(function(x) {
-    p2 += '<tr style="background:#e2e8f0;">';
-    p2 += '<td colspan="3" style="' + hd1 + '">' + x[0] + '</td>';
-    p2 += '<td style="' + hd2 + '">' + fmt(x[1]) + ' 萬</td>';
-    p2 += '</tr>';
-  });
-  p2 += twoCol(buyRows2);
-
-  // 賣出成本標題
-  p2 += '<tr style="background:#1e3a5f;"><td colspan="4" style="' + hd1 + 'color:#fff;">💰 賣出費用</td></tr>';
-  p2 += twoCol(sellRows2);
-
-  // 房地合一稅
-  taxRows.forEach(function(x) {
-    p2 += '<tr style="background:#fee2e2;">';
-    p2 += '<td colspan="3" style="' + hd1 + '">' + x[0] + '</td>';
-    p2 += '<td style="' + hd2 + 'color:#dc2626;">' + fmt(x[1]) + ' 萬</td>';
-    p2 += '</tr>';
-  });
-
-  // 賣出總價
-  p2 += '<tr style="background:#dbeafe;">';
-  p2 += '<td colspan="3" style="' + hd1 + 'color:#1e3a5f;">賣出總價</td>';
-  p2 += '<td style="' + hd2 + 'color:#1e3a5f;">' + fmt(r.sellPrice || 0) + ' 萬</td>';
-  p2 += '</tr>';
-
-  // 稅後淨收
-  var nc = netIncome >= 0 ? '#15803d' : '#dc2626';
-  p2 += '<tr style="background:#dcfce7;">';
-  p2 += '<td colspan="3" style="' + hd1 + 'color:' + nc + ';">稅後淨收</td>';
-  p2 += '<td style="' + hd2 + 'color:' + nc + ';">' + fmt(netIncome) + ' 萬</td>';
-  p2 += '</tr>';
-
-  p2 += '</table>';
-  p2 += '<p style="text-align:center;font-size:11px;color:#aaa;margin-top:10px;">⚠️ 稅務試算僅供參考，實際金額以稅單金額為主</p>';
-  p2 += '</div>';
-
-  // 第一頁：試算結果
-  var p1 = '<div style="font-family:Microsoft JhengHei,sans-serif;page-break-after:always;">';
-  p1 += '<h2 style="text-align:center;font-size:16px;margin:0 0 4px;color:#1e3a5f;">🏠 房地合一稅試算結果</h2>';
-  p1 += '<p style="text-align:center;font-size:12px;color:#888;margin:0 0 12px;">' + identityText + '　｜　賣出單價 ' + unitPrice + '</p>';
-  p1 += (result ? result.innerHTML : '');
-  p1 += '</div>';
-
-  var pz = document.getElementById('_print-zone');
-  if (!pz) { pz = document.createElement('div'); pz.id = '_print-zone'; document.body.appendChild(pz); }
-
-  pz.innerHTML = p1 + p2;
-
-  setTimeout(function() {
-    window.print();
-    setTimeout(function() { pz.innerHTML = ''; }, 1000);
-  }, 300);
-}
 function getLandExtraTax() {
   const announced = v('s-landAnnounced');
   const declared  = v('s-landDeclared') || announced;
@@ -1277,7 +1126,6 @@ function simRender(unitPrice) {
     </div>` : ''}
     <p style="font-size:.78rem;color:var(--text-light);text-align:center;margin-top:8px;">⚠️ 稅務試算僅供參考，實際金額以稅單金額為主</p>
   `;
-  document.getElementById('s-print-btn-wrap').style.display = 'block';
 }
 
 function simFindBreakeven(params) {
@@ -1400,31 +1248,6 @@ function calcOld() {
       </div>
       <p style="font-size:.78rem;color:var(--text-light);text-align:center;margin-top:8px;">⚠️ 稅務試算僅供參考，實際金額以稅單金額為主</p>`;
   }
-  document.getElementById('old-print-btn-wrap').style.display = 'block';
-}
-
-function printOldResult() {
-  const result = document.getElementById('old-result');
-  const isActual = document.getElementById('old-actual').style.display !== 'none';
-  const modeLabel = isActual ? '核實認定' : '評定現值';
-
-  let printDiv = document.getElementById('_print-zone');
-  if (!printDiv) {
-    printDiv = document.createElement('div');
-    printDiv.id = '_print-zone';
-    document.body.appendChild(printDiv);
-  }
-
-  printDiv.innerHTML = `
-    <div class="_print-title">📜 舊制財產交易所得稅試算結果</div>
-    <div class="_print-sub">${modeLabel}</div>
-    ${result ? result.innerHTML : ''}
-  `;
-
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => { printDiv.innerHTML = ''; }, 1000);
-  }, 300);
 }
 
 function clearOld() {
@@ -1432,7 +1255,6 @@ function clearOld() {
     const el = document.getElementById(id); if(el) el.value = '';
   });
   document.getElementById('old-result').innerHTML = '';
-  document.getElementById('old-print-btn-wrap').style.display = 'none';
 }
 
 /* ========== 房貸計算 ========== */
@@ -1825,28 +1647,8 @@ function owRender() {
         </div>` : ''}
     </div>
     <p style="font-size:.78rem;color:var(--text-light);text-align:center;margin-top:8px;">⚠️ 稅務試算僅供參考，實際金額以稅單金額為主</p>`;
-  document.getElementById('ow-print-btn-wrap').style.display = 'block';
 }
 
-function printOwResult() {
-  const result = document.getElementById('ow-result');
-  const unitPrice = document.getElementById('ow-sliderDisplay').textContent;
-  let printDiv = document.getElementById('_print-zone');
-  if (!printDiv) {
-    printDiv = document.createElement('div');
-    printDiv.id = '_print-zone';
-    document.body.appendChild(printDiv);
-  }
-  printDiv.innerHTML = `
-    <div class="_print-title">🏠 屋主售屋淨收試算結果</div>
-    <div class="_print-sub">賣出單價 ${unitPrice}</div>
-    ${result ? result.innerHTML : ''}
-  `;
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => { printDiv.innerHTML = ''; }, 1000);
-  }, 300);
-}
 document.addEventListener('DOMContentLoaded', () => {
   const today = new Date();
   const minDate = new Date('2016-01-01');

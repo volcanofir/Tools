@@ -257,35 +257,6 @@ border-bottom: 1.5px solid #8a7040; padding-bottom: 6px;
 .hf select { padding: 5px 8px; font-size: 13px; width: auto; font-family: 'DM Mono', monospace; font-weight: 600; border: 2px solid #8a7040; border-radius: 3px; background: #fff; }
 .hf.monthly { margin-left: 6px; border-left: 1px dashed #8a7040; padding-left: 16px; }
 
-@media print {
-html, body { margin: 0 !important; padding: 0 !important; height: auto !important; }
-body > * { display: none !important; }
-#_pdf-zone {
-display: block !important;
-width: 100% !important;
-margin: 0 !important;
-padding: 20px !important;
-background: #fff !important;
-}
-#_pdf-zone table { display: table !important; width: 100%; border-collapse: collapse; font-size: 13px; }
-#_pdf-zone thead { display: table-header-group !important; }
-#_pdf-zone tbody { display: table-row-group !important; }
-#_pdf-zone tr { display: table-row !important; }
-#_pdf-zone th, #_pdf-zone td { display: table-cell !important; border: 1px solid #999 !important; padding: 6px 8px !important; text-align: center !important; }
-#_pdf-zone th { white-space: nowrap !important; }
-#_pdf-zone td.rmk { text-align: left !important; white-space: normal !important; word-break: break-word !important; max-width: 400px; }
-#_pdf-zone td.rmk:empty { max-width: 60px; }
-#_pdf-zone td.rmk hr { display: block !important; border: none !important; border-top: 1px dashed #999 !important; margin: 4px 0 !important; }
-#_pdf-zone .tscroll { display: block !important; overflow: visible !important; max-height: none !important; }
-#_pdf-zone .tbar { display: block !important; padding: 8px 12px; margin-bottom: 8px; font-size: 13px; }
-#_pdf-zone .print-disclaimer { display: block !important; text-align: center; font-size: 11px; color: #888; margin-top: 10px; }
-#_pdf-zone .print-title { display: block !important; text-align: center; font-size: 20px; font-weight: 900; margin-bottom: 14px; }
-#_pdf-zone tr.cur-row { background: #ffea00 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-#_pdf-zone tr.cur-row td { color: #3a1800 !important; font-weight: 800 !important; }
-}
-@media screen { #_pdf-zone { display: none !important; } }
-.print-only { display: none; }
-.print-disclaimer { display: none; }
 @media screen {
 body {
 background:
@@ -325,20 +296,6 @@ font-size:14px;
 font-weight:800;
 text-decoration:none;
 }
-#pdf-btn-wrap {
-display:flex;
-justify-content:flex-end;
-align-items:center;
-gap:12px;
-margin-bottom:14px !important;
-}
-#pdf-btn-wrap button {
-background:#0f766e !important;
-color:#fff !important;
-border-radius:999px !important;
-box-shadow:0 10px 24px rgba(15,118,110,.18);
-}
-#pdf-btn-wrap div { text-align:right;max-width:360px; }
 .tab-nav,.sub-nav {
 border:1px solid #cfe0da;
 border-radius:14px;
@@ -423,8 +380,6 @@ color:#0f766e;
 @media screen and (max-width:760px){
 .container{padding:14px;}
 header{padding:22px 18px;}
-#pdf-btn-wrap{display:block;text-align:left !important;}
-#pdf-btn-wrap div{text-align:left;margin-top:8px;}
 .tab-nav,.sub-nav{display:grid;}
 .tab-btn,.sub-btn{padding:12px 10px;}
 .g3,.g4,.g5,.g6{grid-template-columns:1fr;}
@@ -446,15 +401,6 @@ tbody td,thead th{padding:10px 8px;font-size:13px;}
     <h1>價格建議工具</h1>
     <div class="subtitle">PRICE SUGGESTION CALCULATOR</div>
   </header>
-
-  <div id="pdf-btn-wrap" style="text-align:right;margin-bottom:10px;">
-    <button onclick="printPDF()" style="background:#3a2000;color:#ffd240;border:none;padding:10px 20px;border-radius:6px;font-family:'DM Mono',monospace;font-weight:900;font-size:13px;cursor:pointer;letter-spacing:.05em;">
-      🖨️ 列印 / 儲存為 PDF
-    </button>
-    <div style="font-size:11px;color:#888;margin-top:6px;font-family:'DM Mono',monospace;">
-      💡 若列印預覽留白過多，可在列印設定中調整<strong>縮放比例</strong>來填滿頁面
-    </div>
-  </div>
 
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab(0)">
@@ -532,7 +478,6 @@ tbody td,thead th{padding:10px 8px;font-size:13px;}
         </div>
       </div>
 
-      <div class="print-disclaimer print-title" style="text-align:center;font-size:20px;font-weight:900;font-family:'DM Mono',monospace;color:#3a2000;margin-bottom:14px;letter-spacing:.1em;">買方價格建議</div>
       <div class="tsect">
         <div class="tbar gold-bar"><span>單價試算（無車位）</span><span id="n_info">坪數：22.26 坪</span></div>
         <div class="tscroll">
@@ -540,7 +485,6 @@ tbody td,thead th{padding:10px 8px;font-size:13px;}
             <th>單價（萬/坪）</th><th>坪數</th><th>房屋總價（萬）</th><th id="n_th_A">自備款A</th><th id="n_th_B">自備款B</th>
           </tr></thead><tbody id="n_tbody"></tbody></table>
         </div>
-        <div class="print-disclaimer" style="text-align:center;font-size:11px;color:#888;margin-top:10px;font-family:'DM Mono',monospace;">相關數據資料，僅供購屋規劃參考。最終核貸條件以銀行核定為主</div>
       </div>
     </div><!-- /b_sub0 -->
 
@@ -607,7 +551,6 @@ tbody td,thead th{padding:10px 8px;font-size:13px;}
         </div>
       </div>
 
-      <div class="print-disclaimer print-title" style="text-align:center;font-size:20px;font-weight:900;font-family:'DM Mono',monospace;color:#3a2000;margin-bottom:14px;letter-spacing:.1em;">買方價格建議</div>
       <div class="tsect">
         <div class="tbar navy-bar"><span>單價試算（有車位）</span><span id="p_info">坪數：22.26 坪 ｜ 車位：150 萬</span></div>
         <div class="tscroll">
@@ -615,7 +558,6 @@ tbody td,thead th{padding:10px 8px;font-size:13px;}
             <th>單坪價格</th><th>房屋總價</th><th>車位（萬）</th><th>合計總價（萬）</th><th id="p_th_A">自備款A</th><th id="p_th_B">自備款B</th>
           </tr></thead><tbody id="p_tbody"></tbody></table>
         </div>
-        <div class="print-disclaimer" style="text-align:center;font-size:11px;color:#888;margin-top:10px;font-family:'DM Mono',monospace;">相關數據資料，僅供購屋規劃參考。最終核貸條件以銀行核定為主</div>
       </div>
     </div><!-- /b_sub1 -->
 
@@ -644,7 +586,6 @@ tbody td,thead th{padding:10px 8px;font-size:13px;}
         </div>
       </div>
 
-      <div class="print-disclaimer print-title" style="text-align:center;font-size:20px;font-weight:900;font-family:'DM Mono',monospace;color:#1e3d24;margin-bottom:14px;letter-spacing:.1em;">賣方價格建議</div>
       <div class="tsect">
         <div class="tbar sage-bar"><span>單價試算（無車位）</span><span id="an_info">坪數：55.36 坪</span></div>
         <div class="tscroll">
@@ -652,7 +593,6 @@ tbody td,thead th{padding:10px 8px;font-size:13px;}
             <th>單價（萬/坪）</th><th>坪數</th><th>總價（萬）</th><th>條件／備注</th>
           </tr></thead><tbody id="an_tbody"></tbody></table>
         </div>
-        <div class="print-disclaimer" style="text-align:center;font-size:11px;color:#888;margin-top:10px;font-family:'DM Mono',monospace;">此數據只在協助賣方了解市場行情，不代表最終成交價格之保證</div>
       </div>
     </div><!-- /s_sub0 -->
 
@@ -673,7 +613,6 @@ tbody td,thead th{padding:10px 8px;font-size:13px;}
         </div>
       </div>
 
-      <div class="print-disclaimer print-title" style="text-align:center;font-size:20px;font-weight:900;font-family:'DM Mono',monospace;color:#1e3d24;margin-bottom:14px;letter-spacing:.1em;">賣方價格建議</div>
       <div class="tsect">
         <div class="tbar sage-bar"><span>單價試算（有車位）</span><span id="ap_info">坪數：55.36 坪 ｜ 車位：500 萬</span></div>
         <div class="tscroll">
@@ -681,7 +620,6 @@ tbody td,thead th{padding:10px 8px;font-size:13px;}
             <th>單價（萬/坪）</th><th>坪數</th><th>車位（萬）</th><th>總價（萬）</th><th>條件／備注</th>
           </tr></thead><tbody id="ap_tbody"></tbody></table>
         </div>
-        <div class="print-disclaimer" style="text-align:center;font-size:11px;color:#888;margin-top:10px;font-family:'DM Mono',monospace;">此數據只在協助賣方了解市場行情，不代表最終成交價格之保證</div>
       </div>
     </div><!-- /s_sub1 -->
 
@@ -937,33 +875,6 @@ function buildAyes(){
     tr.innerHTML=`<td class="pc">${u}${ic?' ◀':''}</td><td>${ping}</td><td>${fmt(park)}</td><td class="pc">${fmt(grand)}</td><td class="rmk">${rmkHtml}</td>`;
     tb.appendChild(tr);
   }
-}
-
-function printPDF(){
-  const activeTab = document.querySelector('.tab-panel.active');
-  const activeSub = activeTab ? activeTab.querySelector('.sub-panel.active') : null;
-  if(!activeSub) return;
-  const tsect = activeSub.querySelector('.tsect');
-  const title  = activeSub.querySelector('.print-title');
-  if(!tsect) return;
-  let printZone = document.getElementById('_pdf-zone');
-  if(!printZone){
-    printZone = document.createElement('div');
-    printZone.id = '_pdf-zone';
-    document.body.insertBefore(printZone, document.body.firstChild);
-  }
-  printZone.innerHTML = '';
-  if(title){
-    const t = title.cloneNode(true);
-    t.style.cssText = 'display:block !important; text-align:center; font-size:20px; font-weight:900; margin-bottom:14px;';
-    printZone.appendChild(t);
-  }
-  const ts = tsect.cloneNode(true);
-  ts.style.display = 'block';
-  const tscroll = ts.querySelector('.tscroll');
-  if(tscroll){ tscroll.style.overflow = 'visible'; tscroll.style.maxHeight = 'none'; }
-  printZone.appendChild(ts);
-  setTimeout(()=>{ window.print(); setTimeout(()=>{ printZone.innerHTML=''; }, 1000); }, 300);
 }
 
 /* ── Tab / Sub switching ── */
