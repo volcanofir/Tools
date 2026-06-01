@@ -132,14 +132,17 @@ font-size: 16px; font-weight: 600; text-align: left;
 
 /* 模式切換按鈕 */
 .mode-toggle {
-display: inline-flex; border: 2px solid #8a7040; border-radius: 4px; overflow: hidden;
+display: flex; width: 100%; border: 2px solid #8a7040; border-radius: 4px; overflow: hidden;
 margin-bottom: 4px;
 }
 .mode-btn {
+flex: 1 1 0;
+min-width: 0;
 padding: 5px 14px; background: #ddd6c4; border: none; cursor: pointer;
 font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 800;
 color: #6b3d00; letter-spacing: .05em; transition: background .15s, color .15s;
 border-right: 1.5px solid #8a7040;
+white-space: nowrap;
 }
 .mode-btn:last-child { border-right: none; }
 .mode-btn.active { background: #7a4d00; color: #fff; }
