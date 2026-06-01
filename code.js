@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tool-cache-v4';
+const CACHE_NAME = 'tool-cache-v5';
 
 const FILES_TO_CACHE = [
   './',
@@ -7,7 +7,8 @@ const FILES_TO_CACHE = [
   './tax.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './assets/hero-analytics-workbench.png'
 ];
 
 self.addEventListener('install', event => {

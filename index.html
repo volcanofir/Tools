@@ -192,8 +192,9 @@
       box-shadow: 0 18px 34px rgba(16,32,28,.16);
     }
 
-    .hero-panel {
+    .hero-visual {
       align-self: center;
+      position: relative;
       border: 1px solid rgba(16,32,28,.12);
       border-radius: 22px;
       background: rgba(255,255,255,.76);
@@ -202,93 +203,51 @@
       backdrop-filter: blur(14px);
     }
 
-    .panel-head {
+    .hero-visual img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    .visual-caption {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 18px 18px 14px;
-      border-bottom: 1px solid var(--line);
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.36);
+      border-radius: 16px;
+      background: rgba(16,32,28,.72);
+      color: #fff;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 14px 34px rgba(16,32,28,.22);
     }
 
-    .panel-title {
+    .caption-title {
+      font-size: 14px;
       font-weight: 900;
-      letter-spacing: .03em;
+      letter-spacing: .04em;
     }
 
-    .panel-status {
+    .caption-sub {
+      margin-top: 3px;
+      color: rgba(255,255,255,.74);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .caption-status {
       padding: 5px 9px;
       border-radius: 999px;
       background: #dcfce7;
       color: #166534;
       font-size: 12px;
       font-weight: 900;
-    }
-
-    .metric-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      padding: 18px;
-    }
-
-    .metric {
-      min-height: 104px;
-      padding: 14px;
-      border-radius: 16px;
-      background: #f7fbf9;
-      border: 1px solid #e1ebe7;
-    }
-
-    .metric.wide { grid-column: 1 / -1; }
-
-    .metric-label {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .metric-value {
-      margin-top: 8px;
-      font-size: 28px;
-      line-height: 1;
-      font-weight: 950;
-      letter-spacing: -.01em;
-    }
-
-    .metric-sub {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .bar-list {
-      display: grid;
-      gap: 9px;
-      margin-top: 10px;
-    }
-
-    .bar {
-      display: grid;
-      grid-template-columns: 72px 1fr;
-      gap: 8px;
-      align-items: center;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .track {
-      height: 8px;
-      border-radius: 999px;
-      background: #e5eee9;
-      overflow: hidden;
-    }
-
-    .fill {
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--teal), #84cc16);
     }
 
     .tools {
@@ -440,7 +399,7 @@
     @media (max-width: 920px) {
       .hero { grid-template-columns: 1fr; padding: 26px; }
       .hero-copy { min-height: auto; }
-      .hero-panel { width: 100%; }
+      .hero-visual { width: 100%; }
       .tools { grid-template-columns: 1fr; }
     }
 
@@ -452,8 +411,7 @@
       h1 { font-size: 38px; }
       .lead { font-size: 16px; }
       .actions { display: grid; grid-template-columns: 1fr; }
-      .metric-grid { grid-template-columns: 1fr; }
-      .metric.wide { grid-column: auto; }
+      .visual-caption { position: static; border-radius: 0; border-width: 1px 0 0; background: #10201c; }
       .quick-note { grid-template-columns: 1fr; }
       .tool-card { min-height: 210px; padding: 20px; }
     }
@@ -484,30 +442,14 @@
         </div>
       </div>
 
-      <aside class="hero-panel" aria-label="工具摘要">
-        <div class="panel-head">
-          <div class="panel-title">今日工作台</div>
-          <div class="panel-status">Ready</div>
-        </div>
-        <div class="metric-grid">
-          <div class="metric">
-            <div class="metric-label">工具數量</div>
-            <div class="metric-value">2</div>
-            <div class="metric-sub">價格建議、稅務試算</div>
+      <aside class="hero-visual" aria-label="房地產試算工作台示意圖">
+        <img src="./assets/hero-analytics-workbench.png" alt="房地產試算工作台示意圖">
+        <div class="visual-caption">
+          <div>
+            <div class="caption-title">Real Estate Decision Desk</div>
+            <div class="caption-sub">價格、貸款、稅費與淨收集中判讀</div>
           </div>
-          <div class="metric">
-            <div class="metric-label">適用情境</div>
-            <div class="metric-value">4</div>
-            <div class="metric-sub">買方、賣方、稅費、淨收</div>
-          </div>
-          <div class="metric wide">
-            <div class="metric-label">常用流程</div>
-            <div class="bar-list">
-              <div class="bar"><span>估價格</span><div class="track"><div class="fill" style="width:88%"></div></div></div>
-              <div class="bar"><span>看貸款</span><div class="track"><div class="fill" style="width:74%"></div></div></div>
-              <div class="bar"><span>算淨收</span><div class="track"><div class="fill" style="width:82%"></div></div></div>
-            </div>
-          </div>
+          <div class="caption-status">Ready</div>
         </div>
       </aside>
     </section>
