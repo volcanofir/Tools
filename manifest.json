@@ -1,12 +1,12 @@
-{
+﻿{
   "name": "試算工具",
   "short_name": "試算工具",
   "description": "房地產試算工具",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f0f4f8",
-  "theme_color": "#1e3a5f",
+  "background_color": "#fff7ed",
+  "theme_color": "#1f2937",
   "orientation": "portrait",
   "icons": [
     {
